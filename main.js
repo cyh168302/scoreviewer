@@ -91,10 +91,11 @@ function readbeatmap(path,id)
 
 function startDraw(beatmap,bpm)
 	{
-		document.getElementById("songs").innerHTML = 
-			"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF\">您的浏览器不支持canvas</canvas>";
 		if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 		bpm = parseInt(bpm);
+		document.getElementById("songs").innerHTML = 
+			"<p>歌曲BPM："+ bpm +"</p>"+
+			"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF\">您的浏览器不支持canvas</canvas>";
 		var ival = parseInt(document.getElementById("grid_ival").value);
 		var sp = parseInt(document.getElementById("space").value);
 		var time_offset = parseFloat(beatmap[0]["timing_sec"]);
