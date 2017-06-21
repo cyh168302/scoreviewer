@@ -5,6 +5,8 @@ function link2()
 {window.open("http://weibo.com/jebwizoscar");}
 function link3()
 {window.open("http://shiitake.me/llbeatmap");}
+function link4()
+{window.open("http://wpa.qq.com/msgrd?v=3&uin=2982349992&site=qq&menu=yes");}
 
 function drawVline(l)
 {
