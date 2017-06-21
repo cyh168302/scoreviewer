@@ -71,16 +71,28 @@ function drawnote(type,value,x,y)
 	}
 }
 
-function readbeatmap(path,name)
+function readbeatmap(path,id)
 {
-	$.getJSON(path,function(data){startDraw(data);});
+	$.getJSON("http://r.llsif.win/maps.json",function(data){
+		var i;
+		var songname;
+		for(i=0;i<data.length;i++)
+			if(data[i]["live_track_id"]==id)songname = data[i]["name"];
+		$.getJSON("bpm.json",function(data){
+			var bpm = data[songname];
+			$.getJSON(path,function(data){
+				startDraw(data,bpm);
+				});
+			});
+		});
 }
 
-function startDraw(beatmap)
+function startDraw(beatmap,bpm)
 	{
 		document.getElementById("songs").innerHTML = 
 			"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF\">您的浏览器不支持canvas</canvas>";
-		var bpm = parseFloat(document.getElementById("bpm").value);
+		if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
+		bpm = parseInt(bpm);
 		var ival = parseInt(document.getElementById("grid_ival").value);
 		var sp = parseInt(document.getElementById("space").value);
 		var time_offset = parseFloat(beatmap[0]["timing_sec"]);
