@@ -69,6 +69,7 @@
         </select>&nbsp;
        谱面等级：
         <select id="song_level">
+        	<option value = "0">（全部）</option>
         	<option value = "12">★12</option>
             <option value = "11">★11</option>
             <option value = "10">★10</option>
@@ -85,87 +86,18 @@
        谱面难度：
         <select id="song_type">
         	<option value = "0">（全部）</option>
-        	<option value = "EASY">EASY</option>
-            <option value = "NORMAL">NORMAL</option>
-            <option value = "HARD">HARD</option>
+        	<option value = "MASTER">MASTER</option>
             <option value = "EXPERT">EXPERT</option>
-            <option value = "MASTER">MASTER</option>
+            <option value = "HARD">HARD</option>
+            <option value = "NORMAL">NORMAL</option>
+            <option value = "EASY">EASY</option>
         </select>&nbsp;
         <input type="button" value="确定筛选" onclick="confirm_fliter();"/></p>
     <p>或者直接搜索：<input id="song_name" style="width:15em"/>&nbsp;<input type="button" value="确定" onclick="confirm_search();"/></p>
     <hr/>
     <div id="songs" style="width:350px"></div>
     <script type="application/javascript">	
-		function confirm_fliter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
-		function confirm_search(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);});}
-		
-		function get_beatmaps(data)
-		{
-			var innerhtml = "";
-			var songslist = document.getElementById("songs");
-			var len = data.length;
-			var song_attr = document.getElementById("song_attr").value;
-			var song_level = document.getElementById("song_level").value;
-			var song_type = document.getElementById("song_type").value;
-			
-			for(i=0;i<len;i++)
-			{
-				if(data[i]["stage_level"]==song_level)
-				{
-					if ((data[i]["difficulty_text"]!="TECHNICAL")&((data[i]["difficulty_text"]==song_type)|(song_type=="0")))
-					{
-						if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
-						{
-							var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
-							switch(data[i]["attribute_icon_id"])
-							{
-								case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-								beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:red;cursor:pointer\">";break;}
-								case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-								beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:green;cursor:pointer\">";break;}
-								case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-								beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:blue;cursor:pointer\">";break;}
-								default:break;
-							}
-							if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
-							else innerhtml = innerhtml + data[i]["difficulty_text"] + " - " + data[i]["name"]+"</p>";
-						}
-					}
-				}	
-			}
-			if(innerhtml=="")innerhtml="<p>（没有找到对应歌曲）</p>"
-			songslist.innerHTML = innerhtml;
-		}
-		
-		function search_beatmaps(data)
-		{
-			var innerhtml = "";
-			var songslist = document.getElementById("songs");
-			var len = data.length;
-			var songname = document.getElementById("song_name").value;
-			
-			for(i=0;i<len;i++)
-			{
-				if((data[i]["name"].toLowerCase().indexOf(songname.toLowerCase())>=0)&(data[i]["difficulty_text"]!="TECHNICAL"))
-				{
-					var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
-					switch(data[i]["attribute_icon_id"])
-					{
-						case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-						beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:red;cursor:pointer\">";break;}
-						case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-						beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:green;cursor:pointer\">";break;}
-						case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-						beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:blue;cursor:pointer\">";break;}
-						default:break;
-					}
-					if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
-					else innerhtml = innerhtml + data[i]["difficulty_text"] + " - " + data[i]["name"]+"</p>";
-				}	
-			}
-			if(innerhtml=="")innerhtml="<p>（没有找到对应歌曲）</p>"
-			songslist.innerHTML = innerhtml;
-		}
+		confirm_fliter();
     </script>
 </body>
 </html>
