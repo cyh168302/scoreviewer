@@ -1,4 +1,16 @@
 // JavaScript Document
+function backtop()
+{
+	var temp = document.createElement("a");
+	temp.href = "#top";
+	temp.click();	
+}
+function tobuttom()
+{
+	var temp = document.createElement("a");
+	temp.href = "#buttom";
+	temp.click();	
+}
 function link1()
 {window.open("http://www59.atwiki.jp/lovelive-sif/pages/115.html");}
 function link2()
@@ -38,7 +50,6 @@ function drawgrid(type,y)
 	if(type == 0)cxt.fillStyle="#BBBBBB";
 	else cxt.fillStyle="#000000";
 	cxt.fillRect(1,y,630,1); 
-	
 }
 
 function drawnote(type,value,x,y)
@@ -77,13 +88,14 @@ function drawnote(type,value,x,y)
 
 function readbeatmap(path,id)
 {
+	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
 	$.getJSON("http://r.llsif.win/maps.json",function(data){
 		var i;
 		var songname;
 		for(i=0;i<data.length;i++)
 			if(data[i]["live_track_id"]==id)songname = data[i]["name"];
 		$.getJSON("bpm.json",function(data){
-			var bpm = data[songname];
+			bpm = data[songname];
 			$.getJSON(path,function(data){
 				startDraw(data,bpm);
 				});
@@ -93,11 +105,17 @@ function readbeatmap(path,id)
 
 function startDraw(beatmap,bpm)
 {
-	if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
+	if (typeof bpm == "undefined")bpm = "0";
+	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	bpm = parseInt(bpm);
-	document.getElementById("songs").innerHTML = 
-		"<p>歌曲BPM："+ bpm +"</p>"+
-			"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF\">您的浏览器不支持canvas</canvas>";
+	if(bpm!=0)
+		document.getElementById("songs").innerHTML = 
+		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+		"<p id=\"buttom\">歌曲BPM："+ bpm +"</p>";
+	else
+		document.getElementById("songs").innerHTML = 
+		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+		"<p id=\"buttom\">（缺少歌曲BPM）</p>";
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
 	var time_offset = parseFloat(beatmap[0]["timing_sec"]);
@@ -117,7 +135,7 @@ function startDraw(beatmap,bpm)
 	c.height = beatmap_length1+2;
 	c.style.background = "#EEE";
 			
-	if(ival!=0)
+	if((ival!=0)&(bpm!=0))
 	{
 		var time_beat = 60000.0/bpm;
 		var time_ival = time_beat/ival;	
@@ -204,6 +222,7 @@ function startDraw(beatmap,bpm)
 			}
 		}
 	}
+	tobuttom();
 }
 		
 function get_beatmaps(data)

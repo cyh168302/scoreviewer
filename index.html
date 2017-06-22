@@ -5,6 +5,9 @@
     <script type="text/javascript" src="jquery.js"></script>
     <script type="text/javascript" src="main.js"></script>
     <style type="text/css">
+		body{
+			background:#FEF
+		}
 		header{
 			color:white;
 			font-weight:bold;
@@ -21,6 +24,18 @@
 			position:relative;
 			left:10px;
 		}
+		pre{
+			left:10px;
+			position:relative;
+		}
+		#div1{  
+            position:fixed;  
+            width:180px;  
+            right:20px;  
+            bottom:20px;  
+			text-align:center;
+			cursor:pointer;
+        } 
     </style>
     <title>SIF谱面保管所(Beta)</title>
 </head>
@@ -32,7 +47,9 @@
 		<p><br/></p>
 	</header>
     
-    <div style="background:#FFF;left:10px;position:relative">
+    <div id="div1" onclick="backtop();"><img src="up.jpg"/></div>
+    
+    <div style="border:1px solid #AAA;background:#FFF">
     	<pre>1、使用本功能可以查询SIF日服已实装的所有谱面的直线图</pre>
         <pre>2、有关曲目bpm的信息可以在 <span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link1();">日服WIKI</span> 查询，这里感谢研究部 @Means88 爬了一份bpm的数据</pre>
@@ -43,15 +60,16 @@
          	onclick="link3();">点击此处</span> 前往</pre>
         <pre>6、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link4();">2982349992</span></pre>
-	</div><hr/>
+	</div>
     
-    <p>请选择谱面拉伸程度（数字越大表示显示的谱面越长）：
+    <p id="top">请选择谱面拉伸程度（数字越大表示显示的谱面越长）：
     	<select id="space">
         	<option value = "200">200</option>
             <option value = "250">250</option>
             <option value = "300">300</option>
             <option value = "350">350</option>
             <option value = "100">100</option>
+            <option value = "150">150</option>
         </select></p>
     <p>节拍线间距：<select id="grid_ival">
             <option value = "4">16分音</option>
