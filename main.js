@@ -19,6 +19,8 @@ function link3()
 {window.open("http://shiitake.me/llbeatmap");}
 function link4()
 {window.open("http://wpa.qq.com/msgrd?v=3&uin=2982349992&site=qq&menu=yes");}
+function link5()
+{window.open("http://github.com/cyh168302/scoreviewer");}
 function confirm_fliter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
 function confirm_search(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);});}
 
@@ -86,7 +88,7 @@ function drawnote(type,value,x,y)
 	}
 }
 
-function readbeatmap(path,id,musicpath)
+function readbeatmap(path,id,musicpath,combo)
 {
 	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
 	$.getJSON("http://r.llsif.win/maps.json",function(data){
@@ -97,13 +99,13 @@ function readbeatmap(path,id,musicpath)
 		$.getJSON("bpm.json",function(data){
 			bpm = data[songname];
 			$.getJSON(path,function(data){
-				startDraw(data,bpm,musicpath);
+				startDraw(data,bpm,musicpath,combo);
 				});
 			});
 		});
 }
 
-function startDraw(beatmap,bpm,path)
+function startDraw(beatmap,bpm,path,combo)
 {
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
@@ -111,13 +113,15 @@ function startDraw(beatmap,bpm,path)
 	if(bpm!=0)
 		document.getElementById("songs").innerHTML = 
 		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p id=\"buttom\">歌曲BPM："+ bpm + "</p>" +
-		"<p>播放音乐：</p><p><audio controls src ="+path+">不支持audio控件</audio></p>";
+		"<p id=\"buttom\">歌曲BPM："+ bpm + "&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p>" +
+		"<p style=\"position:relative;top:20px\">播放音乐：</p>" + 
+		"<p style=\"position:relative;top:-20px;left:100px\"><audio controls src ="+path+">不支持audio控件</audio></p>";
 	else
 		document.getElementById("songs").innerHTML = 
 		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p id=\"buttom\">（缺少歌曲BPM）</p>" +
-		"<p>播放音乐：</p><p><audio controls src ="+path+">不支持audio控件</audio></p>";
+		"<p id=\"buttom\">（缺少歌曲BPM）&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p>" +
+		"<p style=\"position:relative;top:20px\">播放音乐：</p>" + 
+		"<p style=\"position:relative;top:-20px;left:100px\"><audio controls src ="+path+">不支持audio控件</audio></p>";
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
 	var time_offset = parseFloat(beatmap[0]["timing_sec"]);
@@ -257,13 +261,13 @@ function get_beatmaps(data)
 							{
 								case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-									sound_asset + "') style=\"color:red;cursor:pointer\">";break;}
+									sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:red;cursor:pointer\">";break;}
 								case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-									sound_asset + "') style=\"color:green;cursor:pointer\">";break;}
+									sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:green;cursor:pointer\">";break;}
 								case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-									sound_asset + "') style=\"color:blue;cursor:pointer\">";break;}
+									sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:blue;cursor:pointer\">";break;}
 								default:break;
 							}
 							if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
@@ -312,13 +316,13 @@ function get_beatmaps(data)
 								{
 									case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-										sound_asset + "') style=\"color:red;cursor:pointer\">";break;}
+										sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:red;cursor:pointer\">";break;}
 									case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-										sound_asset + "') style=\"color:green;cursor:pointer\">";break;}
+										sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:green;cursor:pointer\">";break;}
 									case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-										sound_asset + "') style=\"color:blue;cursor:pointer\">";break;}
+										sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:blue;cursor:pointer\">";break;}
 									default:break;
 								}
 								if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
@@ -375,13 +379,13 @@ function search_beatmaps(data)
 					{
 						case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-							sound_asset + "') style=\"color:red;cursor:pointer\">";break;}
+							sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:red;cursor:pointer\">";break;}
 						case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-							sound_asset + "') style=\"color:green;cursor:pointer\">";break;}
+							sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:green;cursor:pointer\">";break;}
 						case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
 							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-							sound_asset + "') style=\"color:blue;cursor:pointer\">";break;}
+							sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:blue;cursor:pointer\">";break;}
 						default:break;
 					}
 					if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
