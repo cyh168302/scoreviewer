@@ -2,7 +2,7 @@
 function backtop()
 {
 	var temp = document.createElement("a");
-	temp.href = "#top";
+	temp.href = "#header";
 	temp.click();	
 }
 function tobuttom()
@@ -86,7 +86,7 @@ function drawnote(type,value,x,y)
 	}
 }
 
-function readbeatmap(path,id)
+function readbeatmap(path,id,musicpath)
 {
 	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
 	$.getJSON("http://r.llsif.win/maps.json",function(data){
@@ -97,13 +97,13 @@ function readbeatmap(path,id)
 		$.getJSON("bpm.json",function(data){
 			bpm = data[songname];
 			$.getJSON(path,function(data){
-				startDraw(data,bpm);
+				startDraw(data,bpm,musicpath);
 				});
 			});
 		});
 }
 
-function startDraw(beatmap,bpm)
+function startDraw(beatmap,bpm,path)
 {
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
@@ -111,11 +111,13 @@ function startDraw(beatmap,bpm)
 	if(bpm!=0)
 		document.getElementById("songs").innerHTML = 
 		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p id=\"buttom\">歌曲BPM："+ bpm +"</p>";
+		"<p id=\"buttom\">歌曲BPM："+ bpm + "</p>" +
+		"<p>播放音乐：</p><p><audio controls src ="+path+">不支持audio控件</audio></p>";
 	else
 		document.getElementById("songs").innerHTML = 
 		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p id=\"buttom\">（缺少歌曲BPM）</p>";
+		"<p id=\"buttom\">（缺少歌曲BPM）</p>" +
+		"<p>播放音乐：</p><p><audio controls src ="+path+">不支持audio控件</audio></p>";
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
 	var time_offset = parseFloat(beatmap[0]["timing_sec"]);
@@ -250,14 +252,18 @@ function get_beatmaps(data)
 						if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
 						{
 							var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
+							var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
 							switch(data[i]["attribute_icon_id"])
 							{
 								case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-								beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:red;cursor:pointer\">";break;}
+									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+									sound_asset + "') style=\"color:red;cursor:pointer\">";break;}
 								case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-								beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:green;cursor:pointer\">";break;}
+									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+									sound_asset + "') style=\"color:green;cursor:pointer\">";break;}
 								case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-								beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:blue;cursor:pointer\">";break;}
+									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+									sound_asset + "') style=\"color:blue;cursor:pointer\">";break;}
 								default:break;
 							}
 							if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
@@ -301,14 +307,18 @@ function get_beatmaps(data)
 									flag = false;
 								}
 								var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
+								var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
 								switch(data[i]["attribute_icon_id"])
 								{
 									case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-									beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:red;cursor:pointer\">";break;}
+										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+										sound_asset + "') style=\"color:red;cursor:pointer\">";break;}
 									case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-									beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:green;cursor:pointer\">";break;}
+										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+										sound_asset + "') style=\"color:green;cursor:pointer\">";break;}
 									case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-									beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:blue;cursor:pointer\">";break;}
+										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+										sound_asset + "') style=\"color:blue;cursor:pointer\">";break;}
 									default:break;
 								}
 								if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
@@ -360,14 +370,18 @@ function search_beatmaps(data)
 						flag = false;
 					}
 					var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
+					var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
 					switch(data[i]["attribute_icon_id"])
 					{
 						case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-						beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:red;cursor:pointer\">";break;}
+							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+							sound_asset + "') style=\"color:red;cursor:pointer\">";break;}
 						case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-						beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:green;cursor:pointer\">";break;}
+							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+							sound_asset + "') style=\"color:green;cursor:pointer\">";break;}
 						case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-						beatmap_path + "','" + data[i]["live_track_id"] + "') style=\"color:blue;cursor:pointer\">";break;}
+							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
+							sound_asset + "') style=\"color:blue;cursor:pointer\">";break;}
 						default:break;
 					}
 					if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
