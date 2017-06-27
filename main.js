@@ -31,7 +31,7 @@ function drawVline(l)
 	for(i=0;i<10;i++)
 	{
 		cxt.fillStyle="#000000";
-		cxt.fillRect(i*70,0,2,l); 
+		cxt.fillRect(i*40,0,2,l); 
 	}
 }
 
@@ -51,7 +51,7 @@ function drawgrid(type,y)
 	var cxt=c.getContext("2d");
 	if(type == 0)cxt.fillStyle="#BBBBBB";
 	else cxt.fillStyle="#000000";
-	cxt.fillRect(1,y,630,1); 
+	cxt.fillRect(1,y,360,1); 
 }
 
 function drawnote(type,value,x,y)
@@ -63,25 +63,25 @@ function drawnote(type,value,x,y)
 		case 0:
 		{
 			cxt.fillStyle="#00D030";
-			cxt.fillRect(634-x*70,y-2,64,5); 
+			cxt.fillRect(363-x*40,y-2,36,5); 
 			break;
 		}
 		case 1:
 		{	
 			cxt.fillStyle="#00D030";
-			cxt.fillRect(634-x*70,y-value-2,64,value+5); 
+			cxt.fillRect(363-x*40,y-value-2,36,value+5); 
 			break;
 		}
 		case 2:
 		{
 			cxt.fillStyle="#FF8080";
-			cxt.fillRect(658-x*70,y-8,16,16); 
+			cxt.fillRect(375-x*40,y-5,10,10); 
 			break;
 		}
 		case 3:
 		{	
 			cxt.fillStyle="#FF8080";
-			cxt.fillRect(658-x*70,y-value-2,16,value+5); 
+			cxt.fillRect(375-x*40,y-value-2,10,value+5); 
 			break;
 		}
 		default:break;
@@ -112,16 +112,12 @@ function startDraw(beatmap,bpm,path,combo)
 	bpm = parseInt(bpm);
 	if(bpm!=0)
 		document.getElementById("songs").innerHTML = 
-		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p id=\"buttom\">歌曲BPM："+ bpm + "&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p>" +
-		"<p style=\"position:relative;top:20px\">播放音乐：</p>" + 
-		"<p style=\"position:relative;top:-20px;left:100px\"><audio controls src ="+path+">不支持audio控件</audio></p>";
+		"<canvas id=\"myCanvas\" width=\"480\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+		"<p>歌曲BPM："+ bpm + "&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p><p id=\"buttom\"><audio controls src ="+path+">不支持audio控件</audio></p>";
 	else
 		document.getElementById("songs").innerHTML = 
-		"<canvas id=\"myCanvas\" width=\"750\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p id=\"buttom\">（缺少歌曲BPM）&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p>" +
-		"<p style=\"position:relative;top:20px\">播放音乐：</p>" + 
-		"<p style=\"position:relative;top:-20px;left:100px\"><audio controls src ="+path+">不支持audio控件</audio></p>";
+		"<canvas id=\"myCanvas\" width=\"480\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+		"<p>（缺少歌曲BPM）&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p><p id=\"buttom\"><audio controls src ="+path+">不支持audio控件</audio></p>";
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
 	var time_offset = parseFloat(beatmap[0]["timing_sec"]);
@@ -158,8 +154,8 @@ function startDraw(beatmap,bpm,path,combo)
 				t = Math.floor(t*1000)
 				var tx1 = "Measure:" + m;
 				var tx2 = "Time："+ t +"ms"
-				drawText(tx1,640,k-9);
-				drawText(tx2,640,k+11);
+				drawText(tx1,370,k-9);
+				drawText(tx2,370,k+11);
 			}
 			if(i%ival==1)drawgrid(1,k);	
 			else drawgrid(0,k);
@@ -202,7 +198,7 @@ function startDraw(beatmap,bpm,path,combo)
 	var notes_level = 0;
 	var cnt = 0;
 	var cxt=c.getContext("2d");
-	cxt.lineWidth = 5; 
+	cxt.lineWidth = 3; 
 	cxt.strokeStyle = 'rgba(255,128,128,0.8)'; 
 	for(i=0;i<beatmap.length;i++)
 	{
@@ -220,10 +216,10 @@ function startDraw(beatmap,bpm,path,combo)
 				var time =  Math.floor((beatmap_length - parseFloat(beatmap[i]["timing_sec"]) + time_offset)*sp)+20;
 				if(cnt>0)
 				{
-					cxt.lineTo((9-pos)*70+35,time);
+					cxt.lineTo((9-pos)*40+20,time);
 					cxt.stroke();	
 				}
-				cxt.moveTo((9-pos)*70+35,time);
+				cxt.moveTo((9-pos)*40+20,time);
 				cnt = cnt + 1;
 			}
 		}
@@ -347,6 +343,7 @@ function get_beatmaps(data)
 		}
 	}
 	if(innerhtml=="")innerhtml="<p>（没有找到对应歌曲）</p>"
+	innerhtml = innerhtml + "<p id=\"buttom\"></p>";
 	songslist.innerHTML = innerhtml;
 }
 		
@@ -395,5 +392,6 @@ function search_beatmaps(data)
 		}
 	}
 	if(innerhtml=="")innerhtml="<p>（没有找到对应歌曲）</p>"
+	innerhtml = innerhtml + "<p id=\"buttom\"></p>";
 	songslist.innerHTML = innerhtml;
 }
