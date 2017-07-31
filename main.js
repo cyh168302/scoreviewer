@@ -75,13 +75,25 @@ function drawnote(type,value,x,y)
 		case 2:
 		{
 			cxt.fillStyle="#FF8080";
-			cxt.fillRect(375-x*40,y-5,10,10); 
+			cxt.fillRect(375-x*40,y-5,11,11); 
 			break;
 		}
 		case 3:
 		{	
 			cxt.fillStyle="#FF8080";
-			cxt.fillRect(375-x*40,y-value-2,10,value+5); 
+			cxt.fillRect(375-x*40,y-value-2,11,value+6); 
+			break;
+		}
+		case 4:
+		{
+			cxt.fillStyle="#EE0000";
+			cxt.fillRect(375-x*40,y-5,11,11); 
+			break;
+		}
+		case 5:
+		{
+			cxt.fillStyle="#EEEE00";
+			cxt.fillRect(375-x*40,y-5,11,11); 
 			break;
 		}
 		default:break;
@@ -166,11 +178,25 @@ function startDraw(beatmap,bpm,path,combo)
 	for(i=0;i<beatmap.length;i++)
 	{
 		var note_type = beatmap[i]["effect"];
-		if ((note_type=="1")|(note_type=="2")|(note_type=="4"))
+		if (note_type=="1")
 		{
 			var pos = parseInt(beatmap[i]["position"]);
 			var time =  Math.floor((beatmap_length - parseFloat(beatmap[i]["timing_sec"]) + time_offset)*sp)+20;
 			drawnote(0,0,pos,time);
+		}
+		if (note_type=="2")
+		{
+			var pos = parseInt(beatmap[i]["position"]);
+			var time =  Math.floor((beatmap_length - parseFloat(beatmap[i]["timing_sec"]) + time_offset)*sp)+20;
+			drawnote(0,0,pos,time);
+			drawnote(4,0,pos,time);
+		}
+		if (note_type=="4")
+		{
+			var pos = parseInt(beatmap[i]["position"]);
+			var time =  Math.floor((beatmap_length - parseFloat(beatmap[i]["timing_sec"]) + time_offset)*sp)+20;
+			drawnote(0,0,pos,time);
+			drawnote(5,0,pos,time);
 		}
 		if (note_type=="3")
 		{
