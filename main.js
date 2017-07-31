@@ -31,7 +31,7 @@ function drawVline(l)
 	for(i=0;i<10;i++)
 	{
 		cxt.fillStyle="#000000";
-		cxt.fillRect(i*40,0,2,l); 
+		cxt.fillRect(i*40+50,0,2,l); 
 	}
 }
 
@@ -51,7 +51,7 @@ function drawgrid(type,y)
 	var cxt=c.getContext("2d");
 	if(type == 0)cxt.fillStyle="#BBBBBB";
 	else cxt.fillStyle="#000000";
-	cxt.fillRect(1,y,360,1); 
+	cxt.fillRect(51,y,360,1); 
 }
 
 function drawnote(type,value,x,y)
@@ -63,37 +63,37 @@ function drawnote(type,value,x,y)
 		case 0:
 		{
 			cxt.fillStyle="#00D030";
-			cxt.fillRect(363-x*40,y-2,36,5); 
+			cxt.fillRect(413-x*40,y-2,36,5); 
 			break;
 		}
 		case 1:
 		{	
 			cxt.fillStyle="#00D030";
-			cxt.fillRect(363-x*40,y-value-2,36,value+5); 
+			cxt.fillRect(413-x*40,y-value-2,36,value+5); 
 			break;
 		}
 		case 2:
 		{
 			cxt.fillStyle="#FF8080";
-			cxt.fillRect(375-x*40,y-5,11,11); 
+			cxt.fillRect(425-x*40,y-5,11,11); 
 			break;
 		}
 		case 3:
 		{	
 			cxt.fillStyle="#FF8080";
-			cxt.fillRect(375-x*40,y-value-2,11,value+6); 
+			cxt.fillRect(425-x*40,y-value-2,11,value+6); 
 			break;
 		}
 		case 4:
 		{
 			cxt.fillStyle="#EE0000";
-			cxt.fillRect(375-x*40,y-5,11,11); 
+			cxt.fillRect(425-x*40,y-5,11,11); 
 			break;
 		}
 		case 5:
 		{
 			cxt.fillStyle="#EEEE00";
-			cxt.fillRect(375-x*40,y-5,11,11); 
+			cxt.fillRect(425-x*40,y-5,11,11); 
 			break;
 		}
 		default:break;
@@ -124,11 +124,11 @@ function startDraw(beatmap,bpm,path,combo)
 	bpm = parseInt(bpm);
 	if(bpm!=0)
 		document.getElementById("songs").innerHTML = 
-		"<canvas id=\"myCanvas\" width=\"480\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
 		"<p>歌曲BPM："+ bpm + "&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p><p id=\"buttom\"><audio controls src ="+path+">不支持audio控件</audio></p>";
 	else
 		document.getElementById("songs").innerHTML = 
-		"<canvas id=\"myCanvas\" width=\"480\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
 		"<p>（缺少歌曲BPM）&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p><p id=\"buttom\"><audio controls src ="+path+">不支持audio控件</audio></p>";
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
@@ -148,13 +148,38 @@ function startDraw(beatmap,bpm,path,combo)
 	var c=document.getElementById("myCanvas");
 	c.height = beatmap_length1+2;
 	c.style.background = "#EEE";
-			
+
 	if((ival!=0)&(bpm!=0))
 	{
 		var time_beat = 60000.0/bpm;
 		var time_ival = time_beat/ival;	
 		var i = 0;
 		var k = beatmap_length1;
+		var measures = Math.ceil(beatmap_length*1000/(4*time_beat))+1;
+		var notes_cnt = new Array(measures);
+		for(x=0;x<measures;x++)
+			notes_cnt[x] = 0;	
+		var time_axis = new Array(beatmap.length);
+		for(x=0;x<beatmap.length;x++)
+		{
+			var tt = parseFloat(beatmap[x]["timing_sec"]);
+			if((beatmap[x]["effect"]=="3")|(beatmap[x]["effect"]=="13"))
+				tt += parseFloat(beatmap[x]["effect_value"]);
+			tt = Math.floor(tt*1000);
+			time_axis[x] = tt;
+		}
+		for(x=0;x<time_axis.length;x++)
+		{
+			for(y=0;y<measures;y++)
+			{
+				var temp_t = y*time_beat*4 + Math.floor(time_offset*1000);
+				if (time_axis[x]<temp_t-1)
+				{
+					notes_cnt[y] += 1;
+				} 
+			}
+		}
+		
 		while(k>0)
 		{
 			k = Math.floor((beatmap_length - i*time_ival/1000)*sp)+20;
@@ -166,8 +191,10 @@ function startDraw(beatmap,bpm,path,combo)
 				t = Math.floor(t*1000)
 				var tx1 = "Measure:" + m;
 				var tx2 = "Time："+ t +"ms"
-				drawText(tx1,370,k-9);
-				drawText(tx2,370,k+11);
+				var tx3 = notes_cnt[m]
+				drawText(tx1,420,k-9);
+				drawText(tx2,420,k+11);
+				drawText(tx3,15,k+4)
 			}
 			if(i%ival==1)drawgrid(1,k);	
 			else drawgrid(0,k);
@@ -242,10 +269,10 @@ function startDraw(beatmap,bpm,path,combo)
 				var time =  Math.floor((beatmap_length - parseFloat(beatmap[i]["timing_sec"]) + time_offset)*sp)+20;
 				if(cnt>0)
 				{
-					cxt.lineTo((9-pos)*40+20,time);
+					cxt.lineTo((9-pos)*40+70,time);
 					cxt.stroke();	
 				}
-				cxt.moveTo((9-pos)*40+20,time);
+				cxt.moveTo((9-pos)*40+70,time);
 				cnt = cnt + 1;
 			}
 		}
