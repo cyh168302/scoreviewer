@@ -336,7 +336,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 						}
 					},
 					label : {
-						fontsize:2,
+						fontsize:7,
 						fontweight:200,
 						color : '#4572a7'
 					},
