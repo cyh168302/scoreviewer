@@ -5,6 +5,12 @@ function backtop()
 	temp.href = "#header";
 	temp.click();	
 }
+function backtop2()
+{
+	var temp = document.createElement("a");
+	temp.href = "#myCanvas";
+	temp.click();	
+}
 function tobuttom()
 {
 	var temp = document.createElement("a");
@@ -23,6 +29,47 @@ function link5()
 {window.open("http://github.com/cyh168302/scoreviewer");}
 function confirm_fliter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
 function confirm_search(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);});}
+function confirm_fliter2(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);backtop();});}
+function confirm_search2(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);backtop();});}
+
+
+function get_stars(num)
+{
+	switch(num)
+	{
+		case 1:
+			return "<span style=\"color:#3F3\">★</span>";
+		case 2:
+			return "<span style=\"color:#3F3\">★★</span>";
+		case 3:
+			return "<span style=\"color:#3F3\">★★★</span>";
+		case 4:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★</span>";
+		case 5:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★</span>";
+		case 6:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>";
+		case 7:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+					"<span style=\"color:orange\">★</span>";
+		case 8:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+					"<span style=\"color:orange\">★★</span>";
+		case 9:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+					"<span style=\"color:orange\">★★★</span>";
+		case 10:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+					"<span style=\"color:orange\">★★★</span>"+"<span style=\"color:red\">★</span>";
+		case 11:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+					"<span style=\"color:orange\">★★★</span>"+"<span style=\"color:red\">★★</span>";
+		case 12:
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+					"<span style=\"color:orange\">★★★</span>"+"<span style=\"color:red\">★★★</span>";
+		default:break;	
+	}	
+}
 
 function drawVline(l)
 {
@@ -100,7 +147,7 @@ function drawnote(type,value,x,y)
 	}
 }
 
-function readbeatmap(path,id,musicpath,combo)
+function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 {
 	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
 	$.getJSON("http://r.llsif.win/maps.json",function(data){
@@ -111,25 +158,231 @@ function readbeatmap(path,id,musicpath,combo)
 		$.getJSON("bpm.json",function(data){
 			bpm = data[songname];
 			$.getJSON(path,function(data){
-				startDraw(data,bpm,musicpath,combo);
+				startDraw(path,data,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
 				});
 			});
 		});
 }
 
-function startDraw(beatmap,bpm,path,combo)
+function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,combo,way)
 {
+	var combos = [0,50,100,200,400,600,800];
+	var combo_bonus = [1.00,1.10,1.15,1.20,1.25,1.30,1.35];
+	var len = beatmap.length
+	var beatmap2 = new Array(len);
+	for(i=0;i<len;i++)
+	{
+		var timing_sec = beatmap[i]["timing_sec"];
+		var note_type = beatmap[i]["effect"];
+		var note_pos = beatmap[i]["position"];
+		if((note_type == "3")|(note_type == "13"))
+		{
+			timing_sec = String(parseFloat(beatmap[i]["timing_sec"])+parseFloat(beatmap[i]["effect_value"]));
+		}
+		var temp_note = [timing_sec,note_type,note_pos];
+		beatmap2[i] = temp_note;
+	}
+	for(i=0;i<len;i++)
+	{
+		for(j=0;j<len-i-1;j++)
+		{
+			if(parseFloat(beatmap2[j][0])>parseFloat(beatmap2[j+1][0]))
+			{
+				var tempnote=beatmap2[j];
+				beatmap2[j]=beatmap2[j+1];
+				beatmap2[j+1]=tempnote;	
+			}
+		}	
+	}
+	var pos_notes_with_combo=[0,0,0,0,0,0,0,0,0];
+	for(i=0;i<len;i++)
+	{
+		var c_bonus;
+		if(i<combos[1])c_bonus=combo_bonus[0];
+		else if(i<combos[2])c_bonus=combo_bonus[1];
+		else if(i<combos[3])c_bonus=combo_bonus[2];
+		else if(i<combos[4])c_bonus=combo_bonus[3];
+		else if(i<combos[5])c_bonus=combo_bonus[4];
+		else if(i<combos[6])c_bonus=combo_bonus[5];
+		else c_bonus=combo_bonus[6];
+		
+		var note_value = 1;
+		if(beatmap2[i][1]=="3")note_value=1.25;
+		if(beatmap2[i][1]=="11")note_value=0.5;
+		if(beatmap2[i][1]=="13")note_value=0.625;
+		note_value=note_value*c_bonus;
+		pos_notes_with_combo[9-parseInt(beatmap2[i][2])]=pos_notes_with_combo[9-parseInt(beatmap2[i][2])]+note_value;
+	}
+	//带combo权重总计
+	var total_notes_with_combo = 0;
+	for(i=0;i<9;i++)
+		total_notes_with_combo+=pos_notes_with_combo[i];
+	//保留三位
+	total_notes_with_combo = Math.round(total_notes_with_combo*1000)/1000;
+	for(i=0;i<9;i++)
+	{
+		pos_notes_with_combo[i] = Math.round(pos_notes_with_combo[i]*1000)/1000;
+	}
+	//长按note统计
+	var long_note = 0;
+	for(i=0;i<len;i++)
+		if((beatmap[i]["effect"]=="3")|(beatmap[i]["effect"]=="13"))
+			long_note += 1;	
+	//滑键统计
+	var swing_note = 0;
+	for(i=0;i<len;i++)
+		if((beatmap[i]["effect"]=="11")|(beatmap[i]["effect"]=="13"))
+			swing_note += 1;	
+	//星标统计
+	var star_note = 0;
+	for(i=0;i<len;i++)
+		if(beatmap[i]["effect"]=="4")
+			star_note += 1;	
+	
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	bpm = parseInt(bpm);
-	if(bpm!=0)
-		document.getElementById("songs").innerHTML = 
-		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p>歌曲BPM："+ bpm + "&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p><p id=\"buttom\"><audio controls src ="+path+">不支持audio控件</audio></p>";
+	
+	document.getElementById("songs").innerHTML = 
+	"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
+	"<p id=\"buttom\"></p>";
+	
+	var in_html = "";
+	in_html = in_html + "<p><img src=\""+ iconpath +"\" width=\"150px\" height=\"150px\"/></p>";
+	in_html = in_html + "<div style=\"position:relative;left:180px;top:-160px;width:420px\">";
+	in_html = in_html + "<p>"+ name + " - "+ difficulty;
+	if(way=='1')	
+		in_html = in_html + "<img onclick=\"confirm_fliter2();\"style=\"cursor:pointer;position:absolute;left:400px\" src=\"back.jpg\"/></p>";
 	else
-		document.getElementById("songs").innerHTML = 
-		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-		"<p>（缺少歌曲BPM）&nbsp;&nbsp;&nbsp;总计键数："+ combo +"</p><p id=\"buttom\"><audio controls src ="+path+">不支持audio控件</audio></p>";
+		in_html = in_html + "<img onclick=\"confirm_search2();\"style=\"cursor:pointer;position:absolute;left:400px\" src=\"back.jpg\"/></p>";
+	in_html = in_html + "<p>难度："+ get_stars(parseInt(level)) + "</p>";
+	if(bpm!=0)	
+		in_html = in_html + "<p>歌曲BPM："+bpm+"&nbsp;&nbsp;&nbsp;总计键数： "+ combo + "</p>";
+	else
+		in_html = in_html + "<p>（缺少歌曲BPM）&nbsp;&nbsp;&nbsp;总计键数："+ combo + "</p>";
+	in_html = in_html + "<p>星标数：" + star_note + "&nbsp;&nbsp;长按数：" + long_note + "&nbsp;&nbsp;滑键数：" + swing_note + "</p></div>";
+	in_html = in_html + "<p style=\"postion:relative;top:-150px;\">"; 
+	in_html = in_html + "<audio controls src =" + musicpath + ">不支持audio控件</audio>";
+	in_html = in_html + "<a style=\"position:relative;left:50px;\" href=\""+ path +"\">点击下载谱面文件（.json）</a></p>"
+	pos_note_results = "<div style=\"position:relative;top:-160px;\">"+
+			"<table style=\"width:650px;font-size:12px;font-weight:200\"><tr bgcolor=\"#EEEEBB\" style=\"height:20px\">"+
+				"<th bgcolor=\"#7070FF\" style=\"width:50px;height:20px\">位置</th>"+
+				"<th style=\"width:50px;height:20px\">L4</th>"+
+				"<th style=\"width:50px;height:20px\">L3</th>"+
+				"<th style=\"width:50px;height:20px\">L2</th>"+
+				"<th style=\"width:50px;height:20px\">L1</th>"+
+				"<th style=\"width:50px;height:20px\">C</th>"+
+				"<th style=\"width:50px;height:20px\">R1</th>"+
+				"<th style=\"width:50px;height:20px\">R2</th>"+
+				"<th style=\"width:50px;height:20px\">R3</th>"+
+				"<th style=\"width:50px;height:20px\">R4</th>"+
+				"<th bgcolor=\"#FF7070\" style=\"width:50px;height:20px\">总计</th>"+
+			"</tr><tr bgcolor=\"#EEEEBB\" style=\"height:20px\"><th bgcolor=\"#7070FF\" style=\"width:50px;height:20px\">权重</th>";
+	for(i=0;i<9;i++)
+		pos_note_results+="<th style=\"width:50px;height:20px\">"+pos_notes_with_combo[i]+"</th>";
+	pos_note_results+="<th bgcolor=\"#FF7070\" style=\"width:50px;height:20px\">"+total_notes_with_combo+"</th></table></div>"
+	in_html = in_html + pos_note_results;
+	in_html = in_html + "<div id=\"table\" style=\"position:relative;top:-150px;height:320px;width:650px\"></div>"
+	document.getElementById("song_info").innerHTML = in_html;
+	//document.getElementById("div1").onclick = function(){backtop2();};
+	
+	//--------------------------柱状分布图--------------------------
+		var data = [{name : "L4",value : Math.round(pos_notes_with_combo[0]/total_notes_with_combo*10000)/100,color : '#4572a7'},
+					{name : "L3",value : Math.round(pos_notes_with_combo[1]/total_notes_with_combo*10000)/100,color : '#aa4643'},
+					{name : "L2",value : Math.round(pos_notes_with_combo[2]/total_notes_with_combo*10000)/100,color : '#89a54e'},
+					{name : "L1",value : Math.round(pos_notes_with_combo[3]/total_notes_with_combo*10000)/100,color : '#80699b'},
+					{name : "C" ,value : Math.round(pos_notes_with_combo[4]/total_notes_with_combo*10000)/100,color : '#3d96ae'},
+					{name : "R1",value : Math.round(pos_notes_with_combo[5]/total_notes_with_combo*10000)/100,color : '#4572a7'},
+					{name : "R2",value : Math.round(pos_notes_with_combo[6]/total_notes_with_combo*10000)/100,color : '#aa4643'},
+					{name : "R3",value : Math.round(pos_notes_with_combo[7]/total_notes_with_combo*10000)/100,color : '#89a54e'},
+					{name : "R4",value : Math.round(pos_notes_with_combo[8]/total_notes_with_combo*10000)/100,color : '#80699b'}];
+					
+		var chart = new iChart.Column2D({
+				render : 'table',
+				data : data,
+				title : {
+					text : 'Note位置分布图',
+					color : '#3e576f',
+					fontsize : 15
+				},
+				subtitle : {
+					text : '均为带Combo权重',
+					color : '#6d869f',
+					fontsize : 11
+				},
+				footnote : {
+					text : 'ichartjs.com',
+					color : '#909090',
+					fontsize : 6,
+					padding : '0 38'
+				},
+				width : 650,
+				height : 320,
+				background_color:'#fbfbfb',
+				label : {
+					fontsize:7,
+					color : '#666666'
+				},
+				shadow : false,
+				shadow_blur : 2,
+				shadow_color : '#aaaaaa',
+				shadow_offsetx : 1,
+				shadow_offsety : 0,
+				column_width : 62,
+				sub_option : {
+					listeners : {
+						parseText : function(r, t) {
+							return t + "%";
+						}
+					},
+					label : {
+						fontsize:2,
+						fontweight:200,
+						color : '#4572a7'
+					},
+					border : {
+						width : 2,
+						//radius : '5 5 0 0',//上圆角设置
+						color : '#ffffff'
+					}
+				},
+				coordinate : {
+					background_color : null,
+					grid_color : '#c0c0c0',
+					width : 450,
+					axis : {
+						color : '#c0d0e0',
+						width : [0, 0, 1, 0]
+					},
+					scale : [{
+						position : 'left',
+						start_scale : 0,
+						end_scale : 15,
+						scale_space : 5,
+						scale_enable : false,
+						label : {
+							fontsize:7,
+							color : '#666666'
+						}
+					}]
+				}
+			});
+			//*利用自定义组件构造左侧说明文本。
+			chart.plugin(new iChart.Custom({
+					drawFn:function(){
+						var coo = chart.getCoordinate(),
+							x = coo.get('originx'),
+							y = coo.get('originy'),
+							H = coo.height;
+						chart.target.textAlign('center')
+						.textBaseline('middle')
+						.textFont('600 13px Verdana')
+						.fillText('Note分布区域',x-40,y+H/2,false,'#6d869f', false,false,false,-90);
+					}
+			}));
+			chart.draw();
+	
+	
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
 	var time_offset = parseFloat(beatmap[0]["timing_sec"]);
@@ -282,6 +535,7 @@ function startDraw(beatmap,bpm,path,combo)
 		
 function get_beatmaps(data)
 {
+	document.getElementById("song_info").innerHTML = "";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
 	var len = data.length;
@@ -306,17 +560,24 @@ function get_beatmaps(data)
 						{
 							var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
 							var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
+							var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
+							var difficulty = data[i]["difficulty_text"];
+							var level = data[i]["stage_level"];
+							var name = data[i]["name"];
 							switch(data[i]["attribute_icon_id"])
 							{
-								case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-									sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:red;cursor:pointer\">";break;}
-								case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-									sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:green;cursor:pointer\">";break;}
-								case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-									beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-									sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:blue;cursor:pointer\">";break;}
+								case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('1','" + 
+									beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+									sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+									"') style=\"color:red;cursor:pointer\">";break;}
+								case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('1','" + 
+									beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+									sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+									"') style=\"color:green;cursor:pointer\">";break;}
+								case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('1','" + 
+									beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+									sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+									"') style=\"color:blue;cursor:pointer\">";break;}
 								default:break;
 							}
 							if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
@@ -361,17 +622,24 @@ function get_beatmaps(data)
 								}
 								var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
 								var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
+								var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
+								var difficulty = data[i]["difficulty_text"];
+								var level = data[i]["stage_level"];
+								var name = data[i]["name"];
 								switch(data[i]["attribute_icon_id"])
 								{
-									case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-										sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:red;cursor:pointer\">";break;}
-									case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-										sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:green;cursor:pointer\">";break;}
-									case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-										beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-										sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:blue;cursor:pointer\">";break;}
+									case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('1','" + 
+										beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+										sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+										"') style=\"color:red;cursor:pointer\">";break;}
+									case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('1','" + 
+										beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+										sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+										"') style=\"color:green;cursor:pointer\">";break;}
+									case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('1','" + 
+										beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+										sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+										"') style=\"color:blue;cursor:pointer\">";break;}
 									default:break;
 								}
 								if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
@@ -402,6 +670,7 @@ function get_beatmaps(data)
 		
 function search_beatmaps(data)
 {
+	document.getElementById("song_info").innerHTML = "";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
 	var len = data.length;
@@ -425,17 +694,24 @@ function search_beatmaps(data)
 					}
 					var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
 					var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
+					var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
+					var difficulty = data[i]["difficulty_text"];
+					var level = data[i]["stage_level"];
+					var name = data[i]["name"];
 					switch(data[i]["attribute_icon_id"])
 					{
-						case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-							sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:red;cursor:pointer\">";break;}
-						case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-							sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:green;cursor:pointer\">";break;}
-						case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('" + 
-							beatmap_path + "','" + data[i]["live_track_id"] + "','" + 
-							sound_asset + "','" + data[i]["s_rank_combo"] + "') style=\"color:blue;cursor:pointer\">";break;}
+						case 1:{innerhtml = innerhtml + "<p onclick=readbeatmap('2','" + 
+							beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+							sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+							"') style=\"color:red;cursor:pointer\">";break;}
+						case 2:{innerhtml = innerhtml + "<p onclick=readbeatmap('2','" + 
+							beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+							sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+							"') style=\"color:green;cursor:pointer\">";break;}
+						case 3:{innerhtml = innerhtml + "<p onclick=readbeatmap('2','" + 
+							beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
+							sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
+							"') style=\"color:blue;cursor:pointer\">";break;}
 						default:break;
 					}
 					if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
