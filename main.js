@@ -160,33 +160,12 @@ function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 {
 	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
 	$.getJSON("http://r.llsif.win/maps.json",function(data){
-		var i;
-		var songname;
-		for(i=0;i<data.length;i++)
-			if(data[i]["live_track_id"]==id)songname = data[i]["name"];
+		var i;var songname;
+		for(i=0;i<data.length;i++) {if (data[i]["live_track_id"] == id) {songname = data[i]["name"];break;}}
 		$.getJSON("bpm.json",function(data){
 			bpm = data[songname];
-			try
-			{
-                $.ajaxSetup({
-                    error: function (e) {
-                    	alert("超时或谱面不存在");
-                        var beatmap = [];
-                        startDraw(path,beatmap,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
-                        return false;
-                    }
-                });
-
-				$.getJSON(path,function(data){
-					startDraw(path,data,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
-					});
-			}
-            catch(e)
-			{
-				var beatmap = [];
-                startDraw(path,beatmap,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
-			}
-			});
+			$.getJSON(path,function(data){
+				startDraw(path,data,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);});});
 		});
 }
 
@@ -194,7 +173,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 {
 	var combos = [0,50,100,200,400,600,800];
 	var combo_bonus = [1.00,1.10,1.15,1.20,1.25,1.30,1.35];
-	var len = beatmap.length
+	var len = beatmap.length;
 	var beatmap2 = new Array(len);
 	for(i=0;i<len;i++)
 	{
@@ -231,7 +210,6 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 		else if(i<combos[5])c_bonus=combo_bonus[4];
 		else if(i<combos[6])c_bonus=combo_bonus[5];
 		else c_bonus=combo_bonus[6];
-		
 		var note_value = 1;
 		if(beatmap2[i][1]=="3")note_value=1.25;
 		if(beatmap2[i][1]=="11")note_value=0.5;
@@ -246,9 +224,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	//保留三位
 	total_notes_with_combo = Math.round(total_notes_with_combo*1000)/1000;
 	for(i=0;i<9;i++)
-	{
 		pos_notes_with_combo[i] = Math.round(pos_notes_with_combo[i]*1000)/1000;
-	}
 	//长按note统计
 	var long_note = 0;
 	for(i=0;i<len;i++)
@@ -264,15 +240,15 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	for(i=0;i<len;i++)
 		if(beatmap[i]["effect"]=="4")
 			star_note += 1;	
-	
+
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	bpm = parseInt(bpm);
-
 	document.getElementById("songs").innerHTML =
 		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">"+
 		"您的浏览器不支持canvas</canvas><p id=\"buttom\"></p>";
 
+	//组织页面来显示基本信息
     var in_html = "";
 	in_html = in_html + "<p><img src=\""+ iconpath +"\" width=\"150px\" height=\"150px\"/></p>";
 	in_html = in_html + "<div style=\"position:relative;left:180px;top:-160px;width:420px\">";
@@ -310,10 +286,8 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	in_html = in_html + pos_note_results;
 	in_html = in_html + "<div id=\"table\" style=\"position:relative;top:-150px;height:320px;width:650px\"></div>"
 	document.getElementById("song_info").innerHTML = in_html;
-	//document.getElementById("div1").onclick = function(){backtop2();};
-	
 	//--------------------------柱状分布图--------------------------
-		var data = [{name : "L4",value : Math.round(pos_notes_with_combo[0]/total_notes_with_combo*10000)/100,color : '#4572a7'},
+	var data = [{name : "L4",value : Math.round(pos_notes_with_combo[0]/total_notes_with_combo*10000)/100,color : '#4572a7'},
 					{name : "L3",value : Math.round(pos_notes_with_combo[1]/total_notes_with_combo*10000)/100,color : '#aa4643'},
 					{name : "L2",value : Math.round(pos_notes_with_combo[2]/total_notes_with_combo*10000)/100,color : '#89a54e'},
 					{name : "L1",value : Math.round(pos_notes_with_combo[3]/total_notes_with_combo*10000)/100,color : '#80699b'},
@@ -323,91 +297,29 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 					{name : "R3",value : Math.round(pos_notes_with_combo[7]/total_notes_with_combo*10000)/100,color : '#89a54e'},
 					{name : "R4",value : Math.round(pos_notes_with_combo[8]/total_notes_with_combo*10000)/100,color : '#80699b'}];
 					
-		var chart = new iChart.Column2D({
-				render : 'table',
-				data : data,
-				title : {
-					text : 'Note位置分布图',
-					color : '#3e576f',
-					fontsize : 15
-				},
-				subtitle : {
-					text : '均为带Combo权重',
-					color : '#6d869f',
-					fontsize : 11
-				},
-				footnote : {
-					text : 'ichartjs.com',
-					color : '#909090',
-					fontsize : 6,
-					padding : '0 38'
-				},
-				width : 650,
-				height : 320,
-				background_color:'#fbfbfb',
-				label : {
-					fontsize:7,
-					color : '#666666'
-				},
-				shadow : false,
-				shadow_blur : 2,
-				shadow_color : '#aaaaaa',
-				shadow_offsetx : 1,
-				shadow_offsety : 0,
-				column_width : 62,
-				sub_option : {
-					listeners : {
-						parseText : function(r, t) {
-							return t + "%";
-						}
-					},
-					label : {
-						fontsize:2,
-						fontweight:200,
-						color : '#4572a7'
-					},
-					border : {
-						width : 2,
-						//radius : '5 5 0 0',//上圆角设置
-						color : '#ffffff'
-					}
-				},
-				coordinate : {
-					background_color : null,
-					grid_color : '#c0c0c0',
-					width : 450,
-					axis : {
-						color : '#c0d0e0',
-						width : [0, 0, 1, 0]
-					},
-					scale : [{
-						position : 'left',
-						start_scale : 0,
-						end_scale : 15,
-						scale_space : 5,
-						scale_enable : false,
-						label : {
-							fontsize:7,
-							color : '#666666'
-						}
-					}]
-				}
-			});
-			//*利用自定义组件构造左侧说明文本。
-			chart.plugin(new iChart.Custom({
-					drawFn:function(){
-						var coo = chart.getCoordinate(),
-							x = coo.get('originx'),
-							y = coo.get('originy'),
-							H = coo.height;
-						chart.target.textAlign('center')
-						.textBaseline('middle')
-						.textFont('600 13px Verdana')
-						.fillText('Note分布区域',x-40,y+H/2,false,'#6d869f', false,false,false,-90);
-					}
-			}));
-			chart.draw();
+	var chart = new iChart.Column2D(
+		{render : 'table', data : data,
+			title : {text : 'Note位置分布图', color : '#3e576f', fontsize : 15},
+			subtitle : {text : '均为带Combo权重', color : '#6d869f', fontsize : 11},
+			footnote : {text : 'ichartjs.com', color : '#909090', fontsize : 6, padding : '0 38'},
+			width : 650, height : 320, background_color:'#fbfbfb', label : {fontsize:7, color : '#666666'},
+			shadow : false, shadow_blur : 2, shadow_color : '#aaaaaa', shadow_offsetx : 1, shadow_offsety : 0, column_width : 62,
+			sub_option : {listeners : {parseText : function(r, t) {return t + "%";}}, label : {fontsize:2, fontweight:200, color : '#4572a7'},
+			border : {width : 2, color : '#ffffff'}},
+			coordinate : {background_color : null, grid_color : '#c0c0c0', width : 450, axis : {color : '#c0d0e0', width : [0, 0, 1, 0]},
+			scale : [{position : 'left', start_scale : 0, end_scale : 15, scale_space : 5, scale_enable : false, label : {fontsize:7, color : '#666666'}}]}});
+	//*利用自定义组件构造左侧说明文本。
+	chart.plugin(new iChart.Custom({
+		drawFn:function(){
+			var coo = chart.getCoordinate(),
+			x = coo.get('originx'),
+			y = coo.get('originy'),
+			H = coo.height;
+			chart.target.textAlign('center').textBaseline('middle').textFont('600 13px Verdana')
+				.fillText('Note分布区域',x-40,y+H/2,false,'#6d869f', false,false,false,-90);}}));
+	chart.draw();
 
+	//准备画谱面
     if(beatmap.length <= 0)
     {
         document.getElementById("songs").innerHTML =
