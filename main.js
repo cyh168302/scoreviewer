@@ -166,9 +166,26 @@ function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 			if(data[i]["live_track_id"]==id)songname = data[i]["name"];
 		$.getJSON("bpm.json",function(data){
 			bpm = data[songname];
-			$.getJSON(path,function(data){
-				startDraw(path,data,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
-				});
+			try
+			{
+                $.ajaxSetup({
+                    error: function (e) {
+                    	alert("超时或谱面不存在");
+                        var beatmap = [];
+                        startDraw(path,beatmap,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
+                        return false;
+                    }
+                });
+
+				$.getJSON(path,function(data){
+					startDraw(path,data,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
+					});
+			}
+            catch(e)
+			{
+				var beatmap = [];
+                startDraw(path,beatmap,bpm,songname,difficulty,level,musicpath,iconpath,combo,way);
+			}
 			});
 		});
 }
@@ -251,12 +268,12 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	bpm = parseInt(bpm);
-	
-	document.getElementById("songs").innerHTML = 
-	"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">您的浏览器不支持canvas</canvas>"+
-	"<p id=\"buttom\"></p>";
-	
-	var in_html = "";
+
+	document.getElementById("songs").innerHTML =
+		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">"+
+		"您的浏览器不支持canvas</canvas><p id=\"buttom\"></p>";
+
+    var in_html = "";
 	in_html = in_html + "<p><img src=\""+ iconpath +"\" width=\"150px\" height=\"150px\"/></p>";
 	in_html = in_html + "<div style=\"position:relative;left:180px;top:-160px;width:420px\">";
 	in_html = in_html + "<p>"+ name + " - "+ difficulty;
@@ -345,7 +362,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 						}
 					},
 					label : {
-						fontsize:7,
+						fontsize:2,
 						fontweight:200,
 						color : '#4572a7'
 					},
@@ -390,8 +407,15 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 					}
 			}));
 			chart.draw();
-	
-	
+
+    if(beatmap.length <= 0)
+    {
+        document.getElementById("songs").innerHTML =
+            "<h2 id=\"buttom\" style=\"position:relative;left:10px;height:700px;\">An Error Occured...</h2>";
+        to_bottom();
+        return;
+    }
+
 	var ival = parseInt(document.getElementById("grid_ival").value);
 	var sp = parseInt(document.getElementById("space").value);
 	var time_offset = parseFloat(beatmap[0]["timing_sec"]);
@@ -620,7 +644,7 @@ function get_beatmaps(data)
 				{
 					if((data[i]["stage_level"]==j)&(data[i]["difficulty"]==p))
 					{
-						if ((data[i]["difficulty_text"]!="TECHNICAL")&((data[i]["difficulty_text"]==song_type)|(song_type=="0")))
+						if ((data[i]["difficulty_text"] != "TECHNICAL")&((data[i]["difficulty_text"]==song_type)|(song_type=="0")))
 						{
 							if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
 							{
