@@ -14,11 +14,6 @@
 			font-weight:bold;
 			background:#06F;	
 		}
-    	#text_area{
-			overflow:scroll;
-			height:500px;
-			width:500px;	
-		}
 		p{
 			color:#009;
 			font-weight:bold;
@@ -60,8 +55,8 @@
 		<p><br/></p>
 	</header>
     
-    <div id="div1" onclick="backtop();"><img src="up.jpg"/></div>
-    <div id="div2" onclick="tobuttom();"><img src="down.jpg"/></div>
+    <div id="div1" onclick="back_top();"><img src="up.jpg"/></div>
+    <div id="div2" onclick="to_bottom();"><img src="down.jpg"/></div>
     
     <div style="border:1px solid #AAA;background:#FFF">
    		<pre>1、不建议在移动端打开该网页，推荐使用PC端Chrome浏览器，最佳分辨率1366×768</pre>
@@ -126,30 +121,15 @@
             <option value = "NORMAL">NORMAL</option>
             <option value = "EASY">EASY</option>
         </select>&nbsp;
-        <input type="button" value="确定筛选" onclick="confirm_fliter();"/></p>
-    <p>或者直接搜索：<input id="song_name" 
+        <input type="button" value="确定筛选" onclick="confirm_filter();"/></p>
+    <p>或者直接搜索：<input id="song_name"
     style="width:15em"/>&nbsp;<input type="button" value="确定" onclick="confirm_search();"/></p>
     <hr/>
     <div id="songs" style="width:350px;"></div>
     <div id="song_info" style="position:absolute;top:600px;left:600px;width:600px;background:#FEF">
     </div>
     <script type="application/javascript">
-		$(window).scroll(function()
-		{
-			var t = document.body.scrollTop;
-			var obj = document.getElementById("song_info");
-			if (t<570)
-			{
-				obj.style.position = "absolute";
-				obj.style.top = "570px";
-			}
-			else
-			{
-				obj.style.position = "fixed";
-				obj.style.top = "0px";
-			}
-		});
-		confirm_fliter();
+		confirm_filter();
     </script>
 </body>
 </html>

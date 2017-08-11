@@ -1,17 +1,26 @@
 // JavaScript Document
-function backtop()
+$(window).scroll(function()
+{
+    var t = document.body.scrollTop;
+    var obj = document.getElementById("song_info");
+    if (t < 570)
+    {
+        obj.style.position = "absolute";
+        obj.style.top = "570px";
+    }
+    else
+    {
+        obj.style.position = "fixed";
+        obj.style.top = "0px";
+    }
+});
+function back_top()
 {
 	var temp = document.createElement("a");
 	temp.href = "#header";
 	temp.click();	
 }
-function backtop2()
-{
-	var temp = document.createElement("a");
-	temp.href = "#myCanvas";
-	temp.click();	
-}
-function tobuttom()
+function to_bottom()
 {
 	var temp = document.createElement("a");
 	temp.href = "#buttom";
@@ -27,10 +36,10 @@ function link4()
 {window.open("http://wpa.qq.com/msgrd?v=3&uin=2982349992&site=qq&menu=yes");}
 function link5()
 {window.open("http://github.com/cyh168302/scoreviewer");}
-function confirm_fliter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
+function confirm_filter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
 function confirm_search(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);});}
-function confirm_fliter2(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);backtop();});}
-function confirm_search2(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);backtop();});}
+function confirm_filter2(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);back_top();});}
+function confirm_search2(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);back_top();});}
 
 
 function get_stars(num)
@@ -44,28 +53,28 @@ function get_stars(num)
 		case 3:
 			return "<span style=\"color:#3F3\">★★★</span>";
 		case 4:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★</span>";
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★</span>";
 		case 5:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★</span>";
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★</span>";
 		case 6:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>";
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>";
 		case 7:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>"+
 					"<span style=\"color:orange\">★</span>";
 		case 8:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>"+
 					"<span style=\"color:orange\">★★</span>";
 		case 9:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>"+
 					"<span style=\"color:orange\">★★★</span>";
 		case 10:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>"+
 					"<span style=\"color:orange\">★★★</span>"+"<span style=\"color:red\">★</span>";
 		case 11:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>"+
 					"<span style=\"color:orange\">★★★</span>"+"<span style=\"color:red\">★★</span>";
 		case 12:
-			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#CC0\">★★★</span>"+
+			return "<span style=\"color:#3F3\">★★★</span>"+"<span style=\"color:#EE0\">★★★</span>"+
 					"<span style=\"color:orange\">★★★</span>"+"<span style=\"color:red\">★★★</span>";
 		default:break;	
 	}	
@@ -252,7 +261,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	in_html = in_html + "<div style=\"position:relative;left:180px;top:-160px;width:420px\">";
 	in_html = in_html + "<p>"+ name + " - "+ difficulty;
 	if(way=='1')	
-		in_html = in_html + "<img onclick=\"confirm_fliter2();\"style=\"cursor:pointer;position:absolute;left:400px\" src=\"back.jpg\"/></p>";
+		in_html = in_html + "<img onclick=\"confirm_filter2();\"style=\"cursor:pointer;position:absolute;left:400px\" src=\"back.jpg\"/></p>";
 	else
 		in_html = in_html + "<img onclick=\"confirm_search2();\"style=\"cursor:pointer;position:absolute;left:400px\" src=\"back.jpg\"/></p>";
 	in_html = in_html + "<p>难度："+ get_stars(parseInt(level)) + "</p>";
@@ -264,7 +273,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	in_html = in_html + "<p style=\"postion:relative;top:-150px;\">"; 
 	in_html = in_html + "<audio controls src =" + musicpath + ">不支持audio控件</audio>";
 	in_html = in_html + "<a style=\"position:relative;left:50px;\" href=\""+ path +"\">点击下载谱面文件（.json）</a></p>"
-	pos_note_results = "<div style=\"position:relative;top:-160px;\">"+
+	var pos_note_results = "<div style=\"position:relative;top:-160px;\">"+
 			"<table style=\"width:650px;font-size:12px;font-weight:200\"><tr bgcolor=\"#EEEEBB\" style=\"height:20px\">"+
 				"<th bgcolor=\"#7070FF\" style=\"width:50px;height:20px\">位置</th>"+
 				"<th style=\"width:50px;height:20px\">L4</th>"+
@@ -441,10 +450,10 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 			{
 				var m = Math.floor(i/(ival*4));
 				var t = m*time_beat/250+time_offset;
-				t = Math.floor(t*1000)
+				t = Math.floor(t*1000);
 				var tx1 = "Measure:" + m;
-				var tx2 = "Time："+ t +"ms"
-				var tx3 = notes_cnt[m]
+				var tx2 = "Time："+ t +"ms";
+				var tx3 = notes_cnt[m];
 				drawText(tx1,420,k-9);
 				drawText(tx2,420,k+11);
 				drawText(tx3,15,k+4)
@@ -530,7 +539,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 			}
 		}
 	}
-	tobuttom();
+	to_bottom();
 }
 		
 function get_beatmaps(data)
