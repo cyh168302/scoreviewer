@@ -244,7 +244,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	bpm = parseInt(bpm);
-	//document.getElementById("songs").style.width = "1366px";
+	document.getElementById("songs").style.width = "1366px";
 	document.getElementById("songs").innerHTML =
 		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">"+
 		"您的浏览器不支持canvas</canvas><p id=\"bottom\"></p>";
@@ -482,7 +482,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 function get_beatmaps(data)
 {
 	document.getElementById("song_info").innerHTML = "";
-    //document.getElementById("songs").style.width = "350px";
+    document.getElementById("songs").style.width = "350px";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
 	var len = data.length;
@@ -618,7 +618,7 @@ function get_beatmaps(data)
 function search_beatmaps(data)
 {
 	document.getElementById("song_info").innerHTML = "";
-    //document.getElementById("songs").style.width = "350px";
+    document.getElementById("songs").style.width = "350px";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
 	var len = data.length;
