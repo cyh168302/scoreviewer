@@ -3,10 +3,10 @@ $(window).scroll(function()
 {
     var t = document.body.scrollTop;
     var obj = document.getElementById("song_info");
-    if (t < 570)
+    if (t < 600)
     {
         obj.style.position = "absolute";
-        obj.style.top = "570px";
+        obj.style.top = "600px";
     }
     else
     {
@@ -17,13 +17,13 @@ $(window).scroll(function()
 function back_top()
 {
 	var temp = document.createElement("a");
-	temp.href = "#header";
+	temp.href = "#top";
 	temp.click();	
 }
 function to_bottom()
 {
 	var temp = document.createElement("a");
-	temp.href = "#buttom";
+	temp.href = "#bottom";
 	temp.click();	
 }
 function link1()
@@ -244,9 +244,10 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	if (typeof bpm == "undefined")bpm = "0";
 	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	bpm = parseInt(bpm);
+	//document.getElementById("songs").style.width = "1366px";
 	document.getElementById("songs").innerHTML =
 		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">"+
-		"您的浏览器不支持canvas</canvas><p id=\"buttom\"></p>";
+		"您的浏览器不支持canvas</canvas><p id=\"bottom\"></p>";
 
 	//组织页面来显示基本信息
     var in_html = "";
@@ -304,7 +305,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 			footnote : {text : 'ichartjs.com', color : '#909090', fontsize : 6, padding : '0 38'},
 			width : 650, height : 320, background_color:'#fbfbfb', label : {fontsize:7, color : '#666666'},
 			shadow : false, shadow_blur : 2, shadow_color : '#aaaaaa', shadow_offsetx : 1, shadow_offsety : 0, column_width : 62,
-			sub_option : {listeners : {parseText : function(r, t) {return t + "%";}}, label : {fontsize:2, fontweight:200, color : '#4572a7'},
+			sub_option : {listeners : {parseText : function(r, t) {return t + "%";}}, label : {fontsize:7, fontweight:200, color : '#4572a7'},
 			border : {width : 2, color : '#ffffff'}},
 			coordinate : {background_color : null, grid_color : '#c0c0c0', width : 450, axis : {color : '#c0d0e0', width : [0, 0, 1, 0]},
 			scale : [{position : 'left', start_scale : 0, end_scale : 15, scale_space : 5, scale_enable : false, label : {fontsize:7, color : '#666666'}}]}});
@@ -481,6 +482,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 function get_beatmaps(data)
 {
 	document.getElementById("song_info").innerHTML = "";
+    //document.getElementById("songs").style.width = "350px";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
 	var len = data.length;
@@ -609,13 +611,14 @@ function get_beatmaps(data)
 		}
 	}
 	if(innerhtml=="")innerhtml="<p>（没有找到对应歌曲）</p>"
-	innerhtml = innerhtml + "<p id=\"buttom\"></p>";
+	innerhtml = innerhtml + "<p id=\"bottom\"></p>";
 	songslist.innerHTML = innerhtml;
 }
 		
 function search_beatmaps(data)
 {
 	document.getElementById("song_info").innerHTML = "";
+    //document.getElementById("songs").style.width = "350px";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
 	var len = data.length;
@@ -666,6 +669,6 @@ function search_beatmaps(data)
 		}
 	}
 	if(innerhtml=="")innerhtml="<p>（没有找到对应歌曲）</p>"
-	innerhtml = innerhtml + "<p id=\"buttom\"></p>";
+	innerhtml = innerhtml + "<p id=\"bottom\"></p>";
 	songslist.innerHTML = innerhtml;
 }

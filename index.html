@@ -6,60 +6,31 @@
     <script type="text/javascript" src="main.js"></script>
     <script type="text/javascript" src="ichart.1.2.src.js"></script>
     <style type="text/css">
-		body{
-			background:#FEF
-		}
-		header{
-			color:white;
-			font-weight:bold;
-			background:#06F;	
-		}
-		p{
-			color:#009;
-			font-weight:bold;
-			position:relative;
-			left:10px;
-		}
-		a{
-			color:#F00;
-			position:relative;
-			top:-10px;
-		}
-		pre{
-			left:10px;
-			position:relative;
-		}
-		#div1{  
-            position:fixed;   
-            right:20px;  
-            bottom:80px;  
-			text-align:center;
-			cursor:pointer;
-        } 
-		#div2{  
-            position:fixed;   
-            right:20px;  
-            bottom:20px;  
-			text-align:center;
-			cursor:pointer;
-        } 
-		
+		body{background:#FEF;}
+		p{color:#009; font-weight:bold;position:relative;left:10px;}
+		a{color:#F00;position:relative;top:-10px;}
+		pre{left:10px;position:relative;}
+        #header{color:white;font-weight:bold;background:#06F;}
+        #pre-div{border:1px solid #AAA;background:#FFF;}
+		#div1{position:fixed;right:20px;bottom:80px;text-align:center;cursor:pointer;}
+		#div2{position:fixed;right:20px;bottom:20px;text-align:center;cursor:pointer;}
+        @media screen and(max-width:1366px){body{width:1366px;}}
     </style>
     <title>スクフェス譜面保管所V</title>
 </head>
 
 <body>
-	<header>
+	<div id="header">
 		<h1 style="top:20px;left:20px;position:relative;">欢迎...</h1>
 		<h2 style="top:20px;left:20px;position:relative;" id="func_dis">スクフェス譜面保管所V</h2>
 		<p><br/></p>
-	</header>
+	</div>
     
     <div id="div1" onclick="back_top();"><img src="up.jpg"/></div>
     <div id="div2" onclick="to_bottom();"><img src="down.jpg"/></div>
     
-    <div style="border:1px solid #AAA;background:#FFF">
-   		<pre>1、不建议在移动端打开该网页，推荐使用PC端Chrome浏览器，最佳分辨率1366×768</pre>
+    <div id = "pre-div">
+   		<pre>1、推荐使用PC端Chrome浏览器，最佳分辨率1366×768</pre>
     	<pre>2、使用本功能可以查询SIF日服已实装的所有谱面的直线图</pre>
         <pre>3、有关曲目bpm的信息可以在 <span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link1();">日服WIKI</span> 查询，这里感谢研究部 @Means88 爬了一份bpm的数据</pre>
@@ -73,7 +44,7 @@
             text-decoration:underline;" onclick="link5();">转至GitHub</span></pre>
 	</div>
     
-    <p id="header">请选择谱面拉伸程度（数字越大表示显示的谱面越长）：
+    <p id="top">请选择谱面拉伸程度（数字越大表示显示的谱面越长）：
     	<select id="space">
         	<option value = "200">200</option>
             <option value = "250">250</option>
@@ -126,8 +97,7 @@
     style="width:15em"/>&nbsp;<input type="button" value="确定" onclick="confirm_search();"/></p>
     <hr/>
     <div id="songs" style="width:350px;"></div>
-    <div id="song_info" style="position:absolute;top:600px;left:600px;width:600px;background:#FEF">
-    </div>
+    <div id="song_info" style="position:absolute;top:600px;left:600px;width:600px;background:#FEF"></div>
     <script type="application/javascript">
 		confirm_filter();
     </script>
