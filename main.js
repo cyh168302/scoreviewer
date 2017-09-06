@@ -505,7 +505,7 @@ function get_beatmaps(data)
 					{
 						if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
 						{
-							var beatmap_path = "http://r.llsif.win/livejson/"+data[i]["notes_setting_asset"];
+							var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
 							var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
 							var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
 							var difficulty = data[i]["difficulty_text"];
@@ -567,7 +567,7 @@ function get_beatmaps(data)
 									innerhtml = innerhtml + "<p>—————————★"+j+"—————————</p>";
 									flag = false;
 								}
-								var beatmap_path = "http://r.llsif.win/livejson/"+data[i]["notes_setting_asset"];
+								var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
 								var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
 								var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
 								var difficulty = data[i]["difficulty_text"];
@@ -640,7 +640,7 @@ function search_beatmaps(data)
 						innerhtml = innerhtml + "<p>—————————★"+j+"—————————</p>";
 						flag = false;
 					}
-					var beatmap_path = "http://r.llsif.win/livejson/"+data[i]["notes_setting_asset"];
+					var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
 					var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
 					var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
 					var difficulty = data[i]["difficulty_text"];
