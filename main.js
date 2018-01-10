@@ -3,10 +3,10 @@ $(window).scroll(function()
 {
     var t = document.body.scrollTop;
     var obj = document.getElementById("song_info");
-    if (t < 550)
+    if (t < 575)
     {
         obj.style.position = "absolute";
-        obj.style.top = "550px";
+        obj.style.top = "575px";
     }
     else
     {
