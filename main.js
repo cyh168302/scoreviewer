@@ -106,7 +106,7 @@ function get_newsongs2(data)
                             case 2:
                             {innerhtml = innerhtml +"NM💛";break;}
                             case 3:
-                            {innerhtml = innerhtml +"HD💗";break;}
+                            {innerhtml = innerhtml +"HD❤️";break;}
                             case 4:
                             {innerhtml = innerhtml +"EX💜";break;}
                             case 6:
