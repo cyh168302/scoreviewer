@@ -3,10 +3,10 @@ $(window).scroll(function()
 {
     var t = document.body.scrollTop;
     var obj = document.getElementById("song_info");
-    if (t < 600)
+    if (t < 550)
     {
         obj.style.position = "absolute";
-        obj.style.top = "600px";
+        obj.style.top = "550px";
     }
     else
     {
@@ -30,17 +30,138 @@ function link1()
 {window.open("http://www59.atwiki.jp/lovelive-sif/pages/115.html");}
 function link2()
 {window.open("http://weibo.com/jebwizoscar");}
-function link3()
-{window.open("http://shiitake.me/llbeatmap");}
 function link4()
 {window.open("http://wpa.qq.com/msgrd?v=3&uin=2982349992&site=qq&menu=yes");}
 function link5()
 {window.open("http://github.com/cyh168302/scoreviewer");}
 function confirm_filter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
 function confirm_search(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);});}
-function confirm_filter2(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);back_top();});}
-function confirm_search2(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);back_top();});}
 
+function get_newsongs()
+{
+    var in_html = "<p style=\"text-align: center;width: inherit\">————————————★★最新谱面★★————————————";
+    document.getElementById("song_info").innerHTML = in_html;
+    $.getJSON("http://r.llsif.win/maps.json",function(data){get_newsongs2(data);});
+}
+
+function get_newsongs2(data)
+{
+    var songslist = document.getElementById("song_info");
+    var innerhtml = songslist.innerHTML;
+    var new_songs = [527,528,445,459,472];
+    var new_beatmaps = [874,875,876,877,878,879,880,881,882,883,20004];
+    var len = data.length;
+
+    var flag;
+    var flag2 = false;
+    var i;
+	var j;
+	var k;
+
+    for(j=0; j<new_songs.length; j++)
+    {
+    	flag = true;
+        for (i = len-50; i < len; i++)
+        {
+            if (data[i]["live_track_id"] === new_songs[j])
+            {
+                var beatmap_path = "http://a.llsif.win/live/json/" + data[i]["notes_setting_asset"];
+                var sound_asset = "http://r.llsif.win/" + data[i]["sound_asset"];
+                var icon_asset = "http://r.llsif.win/" + data[i]["live_icon_asset"];
+                var difficulty = data[i]["difficulty_text"];
+                var level = data[i]["stage_level"];
+                var name = data[i]["name"];
+
+                if(flag)
+				{
+                    flag = false;
+                    if(flag2)
+                    	innerhtml = innerhtml + "</tr></table><p style=\"text-align: center;width: inherit\">————————————————————————————————</p>";
+                    else flag2 = true;
+
+					switch (data[i]["attribute_icon_id"])
+					{
+						case 1: {innerhtml = innerhtml + "<p  style=\"text-align: center;color:red\">";break;}
+						case 2: {innerhtml = innerhtml + "<p style=\"text-align: center;color:green\">";break;}
+						case 3: {innerhtml = innerhtml + "<p style=\"text-align: center;color:blue\">";break;}
+						default:break;
+					}
+					innerhtml = innerhtml + data[i]["name"] + "</p><table style='width: 480px;position:relative;left:70px'><tr style=\"width: inherit\">  ";
+				}
+
+                for (k= 0; k < new_beatmaps.length; k++)
+				{
+                    if (data[i]["live_setting_id"] === new_beatmaps[k])
+                    {
+                        innerhtml = innerhtml + "<th style=\"text-align: center;width: inherit;cursor:pointer\"" +
+							" onclick=readbeatmap('1','" + beatmap_path + "','" + data[i]["live_track_id"] + "','" +
+							difficulty + "','" + level + "','" + sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + "') >";
+
+                        var diff = data[i]["difficulty"];
+                        if(data[i]["live_setting_id"] >20000)diff = 7;
+                        switch (diff)
+						{
+							case 1:
+							{innerhtml = innerhtml +"EZ💚";break;}
+                            case 2:
+                            {innerhtml = innerhtml +"NM💛";break;}
+                            case 3:
+                            {innerhtml = innerhtml +"HD💗";break;}
+                            case 4:
+                            {innerhtml = innerhtml +"EX💜";break;}
+                            case 6:
+                            {innerhtml = innerhtml +"MA🔥";break;}
+                            case 7:
+                            {innerhtml = innerhtml +"AC🔥";break;}
+							default:break;
+						}
+
+						var s_score = data[i]["s_rank_score"];
+						var s_combo = data[i]["s_rank_combo"];
+						var s = s_score/s_combo;
+						var id = data[i]["live_setting_id"];
+						if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
+                            innerhtml = innerhtml + data[i]["stage_level"]  + " - " + data[i]["s_rank_combo"] + "x(滑键)</th> ";
+						else if((id==719)|(id==721)|(id==731))
+                            innerhtml = innerhtml + data[i]["stage_level"]  + " - " + data[i]["s_rank_combo"] + "x(滑键)</th> ";
+						else
+                            innerhtml = innerhtml + data[i]["stage_level"]  + " - " + data[i]["s_rank_combo"] + "x</th> ";
+
+                        //if(diff==6 && )
+                    }
+				}
+            }
+        }
+    }
+    songslist.innerHTML = innerhtml;
+}
+
+function oninput1()
+{
+    var range=document.getElementById("space");
+    var text=document.getElementById("space2");
+    text.value=range.value;
+}
+function oninput2()
+{
+    var range=document.getElementById("space");
+    var text=document.getElementById("space2");
+    range.value=text.value;
+}
+
+function confirm_filter2()
+{
+    var t = document.getElementById("topscroll").value;
+    confirm_filter();
+    window.scrollTo(0, t);
+}
+
+function confirm_search2()
+{
+    var t = document.getElementById("topscroll").value;
+    confirm_search();
+    window.scrollTo(0, t);
+}
 
 function get_stars(num)
 {
@@ -158,6 +279,9 @@ function drawnote(type,value,x,y)
 
 function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 {
+    var t = document.body.scrollTop;
+    var text = document.getElementById("topscroll");
+    text.value = t;
 	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
 	$.getJSON("http://r.llsif.win/maps.json",function(data){
 		var i;var songname;
@@ -481,7 +605,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 		
 function get_beatmaps(data)
 {
-	document.getElementById("song_info").innerHTML = "";
+    get_newsongs();
     document.getElementById("songs").style.width = "350px";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
@@ -617,7 +741,7 @@ function get_beatmaps(data)
 		
 function search_beatmaps(data)
 {
-	document.getElementById("song_info").innerHTML = "";
+    get_newsongs();
     document.getElementById("songs").style.width = "350px";
 	var innerhtml = "";
 	var songslist = document.getElementById("songs");
@@ -662,8 +786,20 @@ function search_beatmaps(data)
 							"') style=\"color:blue;cursor:pointer\">";break;}
 						default:break;
 					}
-					if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
-					else innerhtml = innerhtml + data[i]["difficulty_text"] + " - " + data[i]["name"]+"</p>";
+                    if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml + "ARCADE - " + data[i]["name"]+"</p>";
+                    else
+                    {
+                        var s_score = data[i]["s_rank_score"];
+                        var s_combo = data[i]["s_rank_combo"];
+                        var s = s_score/s_combo;
+                        var id = data[i]["live_setting_id"];
+                        if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
+                            innerhtml = innerhtml + data[i]["difficulty_text"] + "(滑) - " + data[i]["name"]+"</p>";
+                        else if((id==719)|(id==721)|(id==731))
+                            innerhtml = innerhtml + data[i]["difficulty_text"] + "(滑) - " + data[i]["name"]+"</p>";
+                        else
+                            innerhtml = innerhtml + data[i]["difficulty_text"] + " - " + data[i]["name"]+"</p>";
+                    }
 				}	
 			}
 		}

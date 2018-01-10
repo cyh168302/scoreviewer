@@ -37,30 +37,27 @@
         <pre>4、变速歌曲请不要选择画节拍线！暂时不支持！画了肯定对不准！（其实非变速歌曲也有部分不准）</pre>
         <pre>5、本功能使用了ieb（微博：<span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link2();">@电玩果</span>）提供的曲库信息API</pre>
-        <pre>6、若想查看自己的自制谱(.json)实际效果， <span style="color:#009;cursor:pointer;text-decoration:underline;"
-         	onclick="link3();">点击此处</span> 前往</pre>
-        <pre>7、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
+        <pre>6、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link4();">2982349992</span>，对本程序有兴趣的同学可以<span style="color:#009;cursor:pointer;
             text-decoration:underline;" onclick="link5();">转至GitHub</span></pre>
 	</div>
-    
-    <p id="top">请选择谱面拉伸程度（数字越大表示显示的谱面越长）：
-    	<select id="space">
-        	<option value = "200">200</option>
-            <option value = "250">250</option>
-            <option value = "300">300</option>
-            <option value = "350">350</option>
-            <option value = "100">100</option>
-            <option value = "150">150</option>
-        </select></p>
-    <p>节拍线间距：<select id="grid_ival">
-            <option value = "4">16分音</option>
-            <option value = "8">32分音</option>
-            <option value = "3">12分音</option>
-            <option value = "6">24分音</option>
-	    <option value = "2"> 8分音</option>
-            <option value = "0">（不画节拍线）</option>
-        </select></p>
+
+    <input id="topscroll" style="visibility: hidden;position:absolute"/>
+    <p id="top" style="position: relative;top: 5px">节拍线间距：<select id="grid_ival">
+        <option value = "4">16分音</option>
+        <option value = "8">32分音</option>
+        <option value = "3">12分音</option>
+        <option value = "6">24分音</option>
+        <option value = "2"> 8分音</option>
+        <option value = "0">（不画节拍线）</option>
+    </select></p>
+
+    <p>谱面拉伸程度：
+    	<input id="space2"  value="200" style="width: 30px" oninput="oninput2();"/>
+        <input id="space" type="range" value="200" max="400" min="100" step="10" oninput="oninput1();"
+               style="width: 200px;position: relative;left: 10px;top: 5px">
+    </p>
+
     <p>歌曲属性：
     	<select id="song_attr">
         	<option value = "0">（全部）</option>
@@ -94,13 +91,13 @@
             <option value = "EASY">EASY</option>
         </select>&nbsp;
         <input type="button" value="确定筛选" onclick="confirm_filter();"/></p>
-    <p>或者直接搜索：<input id="song_name"
-    style="width:15em"/>&nbsp;<input type="button" value="确定" onclick="confirm_search();"/></p>
+    <p>或者直接搜索：<input id="song_name" style="width:15em" onkeydown="if(event.keyCode===13) {confirm_search();}"/>&nbsp;
+        <input type="button" value="确定" onclick="confirm_search();"/></p>
     <hr/>
     <div id="songs" style="width:350px;"></div>
-    <div id="song_info" style="position:absolute;top:600px;left:600px;width:600px;background:#FEF"></div>
+    <div id="song_info" style="position:absolute;top:550px;left:600px;width:600px;background:#FEF"></div>
     <script type="application/javascript">
-		confirm_filter();
+        confirm_filter();
     </script>
 </body>
 </html>
