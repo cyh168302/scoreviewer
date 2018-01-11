@@ -591,13 +591,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 			for(i = tmp; i<current_bpm_len + tmp; i++)
 			{
                 k = Math.floor(kk);
-                if(i%ival==0)
-                {
-                    current_time += time_beat;
-                	drawgrid(1,k);
-                }
-                else drawgrid(0,k);
-                if(i%(ival*4)==0)
+				if(i%(ival*4)==0)
                 {
                     measures[counter] = current_time;
                     poss[counter] = k;
@@ -607,6 +601,12 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
                     drawText(tx1,420,k-9);
                     drawText(tx2,420,k+11);
                 }
+                if(i%ival==0)
+                {
+                    current_time += time_beat;
+                	drawgrid(1,k);
+                }
+                else drawgrid(0,k);
                 kk = kk - time_ival/1000*sp;
 			}
 			tmp = tmp + current_bpm_len % (ival*4);
@@ -618,13 +618,6 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 		while (kk>0)
 		{
             k = Math.floor(kk);
-
-            if(tmp%ival==0)
-            {
-                current_time += time_beat;
-            	drawgrid(1,k);
-            }
-            else drawgrid(0,k);
             if(tmp%(ival*4)==0)
             {
                 measures[counter] = current_time;
@@ -635,6 +628,12 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
                 drawText(tx1,420,k-9);
                 drawText(tx2,420,k+11);
             }
+            if(tmp%ival==0)
+            {
+                current_time += time_beat;
+            	drawgrid(1,k);
+            }
+            else drawgrid(0,k);
             kk = kk - time_ival/1000*sp;
             tmp++;
 		}
