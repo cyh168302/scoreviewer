@@ -318,7 +318,8 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	var bpm_change_info = {"MY舞☆TONIGHT":"73.5 12 73 1 61 2 90 2 179",
 							"Wonder zone":"130 33 134 3 142 2 153",
 							"夏色えがおで1,2,Jump!":"171 14 170",
-							"Dreamin’ Go! Go!!":"178 272 121.5"};
+							"Dreamin’ Go! Go!!":"178 272 121.5",
+							"もぎゅっと“love”で接近中！":"139.3 32 139"};
 
 	var combos = [0,50,100,200,400,600,800];
 	var combo_bonus = [1.00,1.10,1.15,1.20,1.25,1.30,1.35];
