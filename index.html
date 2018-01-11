@@ -34,10 +34,11 @@
     	<pre>2、使用本功能可以查询SIF日服已实装的所有谱面的直线图</pre>
         <pre>3、有关曲目bpm的信息可以在 <span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link1();">日服WIKI</span> 查询，这里感谢研究部 @Means88 爬了一份bpm的数据</pre>
-        <pre>4、变速歌曲请不要选择画节拍线！暂时不支持！画了肯定对不准！（其实非变速歌曲也有部分不准）</pre>
-        <pre>5、本功能使用了ieb（微博：<span style="color:#009;cursor:pointer;text-decoration:underline;"
+        <pre>4、关于变速歌曲：目前正在进行测试，将一首一首地逐渐支持对变速歌曲的支持。目前已经支持的变速歌曲：MY舞☆TONIGHT。变速信息需要手动测，如果您已知一些变速信息可以尽快告诉作者w</pre>
+        <pre>5、关于【谱面拉伸程度】：值越大则键与键之间距离越大，更利于观察谱面细节，但同时谱面也会很长，不利于全局观察。请根据需求自行选择合适的值（默认200）。部分浏览器（如IE）可能无法完全显示较长的谱面</pre>
+        <pre>6、本功能使用了ieb（微博：<span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link2();">@电玩果</span>）提供的曲库信息API</pre>
-        <pre>6、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
+        <pre>7、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
          	onclick="link4();">2982349992</span>，对本程序有兴趣的同学可以<span style="color:#009;cursor:pointer;
             text-decoration:underline;" onclick="link5();">转至GitHub</span></pre>
 	</div>
@@ -54,7 +55,7 @@
 
     <p>谱面拉伸程度：
     	<input id="space2"  value="200" style="width: 30px" oninput="oninput2();"/>
-        <input id="space" type="range" value="200" max="400" min="100" step="10" oninput="oninput1();"
+        <input id="space" type="range" value="200" max="400" min="50" step="10" oninput="oninput1();"
                style="width: 200px;position: relative;left: 10px;top: 5px">
     </p>
 
@@ -91,11 +92,11 @@
             <option value = "EASY">EASY</option>
         </select>&nbsp;
         <input type="button" value="确定筛选" onclick="confirm_filter();"/></p>
-    <p>或者直接搜索：<input id="song_name" style="width:15em" onkeydown="if(event.keyCode===13) {confirm_search();}"/>&nbsp;
+    <p>或者直接搜索：<input id="song_name" autofocus = "true" style="width:15em" onkeydown="if(event.keyCode===13) {confirm_search();}"/>&nbsp;
         <input type="button" value="确定" onclick="confirm_search();"/></p>
     <hr/>
     <div id="songs" style="width:350px;"></div>
-    <div id="song_info" style="position:absolute;top:550px;left:600px;width:600px;background:#FEF"></div>
+    <div id="song_info" style="position:absolute;top:575px;left:600px;width:600px;background:#FEF"></div>
     <script type="application/javascript">
         confirm_filter();
     </script>

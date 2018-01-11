@@ -3,10 +3,10 @@ $(window).scroll(function()
 {
     var t = document.body.scrollTop;
     var obj = document.getElementById("song_info");
-    if (t < 550)
+    if (t < 575)
     {
         obj.style.position = "absolute";
-        obj.style.top = "550px";
+        obj.style.top = "575px";
     }
     else
     {
@@ -106,7 +106,7 @@ function get_newsongs2(data)
                             case 2:
                             {innerhtml = innerhtml +"NM💛";break;}
                             case 3:
-                            {innerhtml = innerhtml +"HD💗";break;}
+                            {innerhtml = innerhtml +"HD❤️";break;}
                             case 4:
                             {innerhtml = innerhtml +"EX💜";break;}
                             case 6:
@@ -222,6 +222,16 @@ function drawText(text,x,y)
 	cxt.fillText(text, x, y);
 }
 
+function drawText2(text,x,y)
+{
+    var c=document.getElementById("myCanvas");
+    var cxt=c.getContext("2d");
+    cxt.font = "bold 12px Arial";
+    cxt.fillStyle = "#F000D0";
+    cxt.fontweight = "bold";
+    cxt.fillText(text, x, y);
+}
+
 function drawgrid(type,y)
 {
 	var c=document.getElementById("myCanvas");
@@ -229,6 +239,16 @@ function drawgrid(type,y)
 	if(type == 0)cxt.fillStyle="#BBBBBB";
 	else cxt.fillStyle="#000000";
 	cxt.fillRect(51,y,360,1); 
+}
+
+function drawbpmline(y)
+{
+    var c=document.getElementById("myCanvas");
+    var cxt=c.getContext("2d");
+    cxt.fillStyle = "#F000D0"
+	cxt.fillRect(41,y-1,360,3);
+    cxt.fillRect(39,y-35,3,37);
+    cxt.fillRect(4,y-36,37,3);
 }
 
 function drawnote(type,value,x,y)
@@ -295,6 +315,8 @@ function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 
 function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,combo,way)
 {
+	var bpm_change_info = {"MY舞☆TONIGHT":"73.5 13 61 2 90 2 179"};
+
 	var combos = [0,50,100,200,400,600,800];
 	var combo_bonus = [1.00,1.10,1.15,1.20,1.25,1.30,1.35];
 	var len = beatmap.length;
@@ -366,8 +388,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 			star_note += 1;	
 
 	if (typeof bpm == "undefined")bpm = "0";
-	else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
-	bpm = parseInt(bpm);
+	//else if(bpm.length>3)bpm = bpm.substr(bpm.length-3,3);
 	document.getElementById("songs").style.width = "1366px";
 	document.getElementById("songs").innerHTML =
 		"<canvas id=\"myCanvas\" width=\"530\" height=\"300\" style=\"background:#FFF;position:relative;left:10px\">"+
@@ -461,9 +482,9 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	var l1 = 0;
 	var l2 = 0;
 	if((beatmap[beatmap.length-2]["effect"]=="3")|(beatmap[beatmap.length-2]["effect"]=="13"))
-	var l1 = parseFloat(beatmap[beatmap.length-2]["effect_value"]);
+		 l1 = parseFloat(beatmap[beatmap.length-2]["effect_value"]);
 	if((beatmap[beatmap.length-1]["effect"]=="3")|(beatmap[beatmap.length-1]["effect"]=="13"))
-		var l2 = parseFloat(beatmap[beatmap.length-1]["effect_value"]);
+		 l2 = parseFloat(beatmap[beatmap.length-1]["effect_value"]);
 	if(l1>l2)l=l1;
 	else l=l2;
 	beatmap_length = beatmap_length + l
@@ -472,58 +493,173 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	c.height = beatmap_length1+2;
 	c.style.background = "#EEE";
 
-	if((ival!=0)&(bpm!=0))
+	if(bpm.length<=3)
 	{
-		var time_beat = 60000.0/bpm;
-		var time_ival = time_beat/ival;	
-		var i = 0;
-		var k = beatmap_length1;
-		var measures = Math.ceil(beatmap_length*1000/(4*time_beat))+1;
-		var notes_cnt = new Array(measures);
-		for(x=0;x<measures;x++)
-			notes_cnt[x] = 0;	
-		var time_axis = new Array(beatmap.length);
-		for(x=0;x<beatmap.length;x++)
+    	bpm = parseInt(bpm);
+		if((ival!=0)&(bpm!=0))
 		{
-			var tt = parseFloat(beatmap[x]["timing_sec"]);
-			if((beatmap[x]["effect"]=="3")|(beatmap[x]["effect"]=="13"))
-				tt += parseFloat(beatmap[x]["effect_value"]);
-			tt = Math.floor(tt*1000);
-			time_axis[x] = tt;
-		}
-		for(x=0;x<time_axis.length;x++)
-		{
-			for(y=0;y<measures;y++)
+			var time_beat = 60000.0/bpm;
+			var time_ival = time_beat/ival;
+			var i = 0;
+			var k = beatmap_length1;
+			var measures = Math.ceil(beatmap_length*1000/(4*time_beat))+1;
+			var notes_cnt = new Array(measures);
+			for(x=0;x<measures;x++)
+				notes_cnt[x] = 0;
+			var time_axis = new Array(beatmap.length);
+			for(x=0;x<beatmap.length;x++)
 			{
-				var temp_t = y*time_beat*4 + Math.floor(time_offset*1000);
-				if (time_axis[x]<temp_t-1)
+				var tt = parseFloat(beatmap[x]["timing_sec"]);
+				if((beatmap[x]["effect"]=="3")|(beatmap[x]["effect"]=="13"))
+					tt += parseFloat(beatmap[x]["effect_value"]);
+				tt = Math.floor(tt*1000);
+				time_axis[x] = tt;
+			}
+			for(x=0;x<time_axis.length;x++)
+			{
+				for(y=0;y<measures;y++)
 				{
-					notes_cnt[y] += 1;
-				} 
+					var temp_t = y*time_beat*4 + Math.floor(time_offset*1000);
+					if (time_axis[x]<temp_t-1)
+					{
+						notes_cnt[y] += 1;
+					}
+				}
 			}
-		}
-		
-		while(k>0)
-		{
-			k = Math.floor((beatmap_length - i*time_ival/1000)*sp)+20;
-			i = i + 1;
-			if(i%(ival*4)==1)
+
+			while(k>0)
 			{
-				var m = Math.floor(i/(ival*4));
-				var t = m*time_beat/250+time_offset;
-				t = Math.floor(t*1000);
-				var tx1 = "Measure:" + m;
-				var tx2 = "Time："+ t +"ms";
-				var tx3 = notes_cnt[m];
-				drawText(tx1,420,k-9);
-				drawText(tx2,420,k+11);
-				drawText(tx3,15,k+4)
+				k = Math.floor((beatmap_length - i*time_ival/1000)*sp)+20;
+				i = i + 1;
+				if(i%(ival*4)==1)
+				{
+					var m = Math.floor(i/(ival*4));
+					var t = m*time_beat/250+time_offset;
+					t = Math.floor(t*1000);
+					var tx1 = "Measure:" + m;
+					var tx2 = "Time："+ t +"ms";
+					var tx3 = notes_cnt[m];
+					drawText(tx1,420,k-9);
+					drawText(tx2,420,k+11);
+					drawText(tx3,10,k+4)
+				}
+				if(i%ival==1)drawgrid(1,k);
+				else drawgrid(0,k);
 			}
-			if(i%ival==1)drawgrid(1,k);	
-			else drawgrid(0,k);
 		}
 	}
-			
+	else					//变速处理
+	{
+		var bpm_change = bpm_change_info[name].split(' ');
+		var bpm_change_times = (bpm_change.length-1)/2;
+		var bpm_change_pos = new Array(bpm_change_times);
+        var bpms = new Array(bpm_change_times + 1);
+		for(i=0; i<bpm_change.length;i++)
+		{
+			if(i%2==0) bpms[i/2]=bpm_change[i];
+			else bpm_change_pos[(i-1)/2]=bpm_change[i];
+		}
+
+        var kk = beatmap_length1 - 10;
+		var tmp = 0;
+
+        var current_time = Math.floor(time_offset*1000);
+        var measures = new Array();
+        var poss = new Array();
+        var counter = 0;
+
+		for(j=0;j<bpm_change_times;j++)
+		{
+			var real_bpm = bpms[j];
+			var current_bpm_len = bpm_change_pos[j]*ival;
+            time_beat = 60000.0/real_bpm;
+            time_ival = time_beat/ival;
+           var  k = Math.floor(kk);
+
+           if(j==0)
+           {
+           		drawText2(real_bpm,10,k-40);
+                drawbpmline(k);
+           }
+           else
+		   {
+		   		drawText2(real_bpm,5,k-40);
+                drawText2(bpms[j-1],5,k-20);
+                drawbpmline(k);
+		   }
+
+			for(i = tmp; i<current_bpm_len + tmp; i++)
+			{
+                k = Math.floor(kk);
+                if(i%ival==0)
+                {
+                    current_time += time_beat;
+                	drawgrid(1,k);
+                }
+                else drawgrid(0,k);
+                if(i%(ival*4)==0)
+                {
+                    measures[counter] = current_time;
+                    poss[counter] = k;
+                    counter++;
+                    var tx1 = "Measure:" + counter;
+                    var tx2 = "Time："+ Math.floor(current_time) +"ms";
+                    drawText(tx1,420,k-9);
+                    drawText(tx2,420,k+11);
+                }
+                kk = kk - time_ival/1000*sp;
+			}
+			tmp = tmp + current_bpm_len % (ival*4);
+		}
+
+        real_bpm = bpms[bpm_change_times];
+        time_beat = 60000.0/real_bpm;
+        time_ival = time_beat/ival;
+		while (kk>0)
+		{
+            k = Math.floor(kk);
+
+            if(tmp%ival==0)
+            {
+                current_time += time_beat;
+            	drawgrid(1,k);
+            }
+            else drawgrid(0,k);
+            if(tmp%(ival*4)==0)
+            {
+                measures[counter] = current_time;
+                poss[counter] = k;
+                counter++;
+                var tx1 = "Measure:" + counter;
+                var tx2 = "Time："+ Math.floor(current_time) +"ms";
+                drawText(tx1,420,k-9);
+                drawText(tx2,420,k+11);
+            }
+            kk = kk - time_ival/1000*sp;
+            tmp++;
+		}
+
+        var time_axis = new Array(beatmap.length);
+		var notes_cnt = new Array(measures.length);
+        for(var x=0;x<measures.length;x++) notes_cnt[x] = 0;
+        for(x=0;x<beatmap.length;x++)
+        {
+            var tt = parseFloat(beatmap[x]["timing_sec"]);
+            if((beatmap[x]["effect"]=="3")|(beatmap[x]["effect"]=="13"))
+                tt += parseFloat(beatmap[x]["effect_value"]);
+            tt = Math.floor(tt*1000);
+            time_axis[x] = tt;
+        }
+        for(x=0;x<time_axis.length;x++)
+        {
+            for(var y=0;y<measures.length;y++)
+                if (time_axis[x]<measures[y])
+                    notes_cnt[y] += 1;
+        }
+        for(i=0;i<measures.length;i++)
+            drawText(notes_cnt[i],10,poss[i]+4);
+	}
+
 	drawVline(beatmap_length1);
 	for(i=0;i<beatmap.length;i++)
 	{
