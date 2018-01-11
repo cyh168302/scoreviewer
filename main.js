@@ -319,11 +319,15 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 							"Wonder zone":"130 33 134 3 142 2 153",
 							"夏色えがおで1,2,Jump!":"171 14 170",
 							"Dreamin’ Go! Go!!":"178 272 121.5",
+<<<<<<< HEAD
 							"もぎゅっと“love”で接近中！":"139.3 32 139",
 							"SUNNY DAY SONG":"174.5 12 173",
 							"Awaken the power":"80 16 190",
 							"ススメ→トゥモロウ": "100 34 190",
 							"だってだって噫無情": "80 32 168"};
+=======
+							"もぎゅっと“love”で接近中！":"139.3 32 139"};
+>>>>>>> origin/master
 
 	var combos = [0,50,100,200,400,600,800];
 	var combo_bonus = [1.00,1.10,1.15,1.20,1.25,1.30,1.35];
