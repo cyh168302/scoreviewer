@@ -246,7 +246,7 @@ function drawbpmline(y)
     var c=document.getElementById("myCanvas");
     var cxt=c.getContext("2d");
     cxt.fillStyle = "#F000D0"
-	cxt.fillRect(41,y-1,360,3);
+	cxt.fillRect(41,y-1,370,3);
     cxt.fillRect(39,y-35,3,37);
     cxt.fillRect(4,y-36,37,3);
 }
@@ -315,7 +315,10 @@ function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 
 function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,combo,way)
 {
-	var bpm_change_info = {"MY舞☆TONIGHT":"73.5 13 61 2 90 2 179"};
+	var bpm_change_info = {"MY舞☆TONIGHT":"73.5 12 73 1 61 2 90 2 179",
+							"Wonder zone":"130 33 134 3 142 2 153",
+							"夏色えがおで1,2,Jump!":"171 14 170",
+							"Dreamin’ Go! Go!!":"178 272 121.5"};
 
 	var combos = [0,50,100,200,400,600,800];
 	var combo_bonus = [1.00,1.10,1.15,1.20,1.25,1.30,1.35];
@@ -615,6 +618,8 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
         real_bpm = bpms[bpm_change_times];
         time_beat = 60000.0/real_bpm;
         time_ival = time_beat/ival;
+		flag = true;
+		
 		while (kk>0)
 		{
             k = Math.floor(kk);
@@ -636,6 +641,13 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
             else drawgrid(0,k);
             kk = kk - time_ival/1000*sp;
             tmp++;
+			if(flag)
+			{
+				drawText2(real_bpm,5,k-40);
+				drawText2(bpms[bpms.length-2],5,k-20);
+				drawbpmline(k);
+				flag=false;
+			}
 		}
 
         var time_axis = new Array(beatmap.length);
