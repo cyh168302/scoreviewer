@@ -315,7 +315,7 @@ function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
 
 function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,combo,way)
 {
-	var bpm_change_info = {"MY舞☆TONIGHT":"73.5 12 73 1 61 2 90 2 179",
+	var bpm_change_info = { "MY舞☆TONIGHT":"73.5 12 73 1 61 2 90 2 179",
 							"Wonder zone":"130 33 134 3 142 2 153",
 							"夏色えがおで1,2,Jump!":"171 14 170",
 							"Dreamin’ Go! Go!!":"178 272 121.5",
@@ -325,6 +325,8 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 							"ススメ→トゥモロウ": "100 34 190",
 							"だってだって噫無情": "80 32 168",
                             "勇気はどこに？君の胸に！":"167 258 161",
+							"おやすみなさん！":"164 18 158 4 152 4 148 5 147 1 206",
+							"One More Sunshine Story":"153 102 143 4 133 28 123 4.5 153",
                             "スピカテリブル": "165 262 164 2 158 2 157 2 156 4 137 2 132.5 2 119.5 4 111 4 81 2 65 0.33 61"};
 
 	var combos = [0,50,100,200,400,600,800];
@@ -584,19 +586,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 			var current_bpm_len = bpm_change_pos[j]*ival;
             time_beat = 60000.0/real_bpm;
             time_ival = time_beat/ival;
-           var  k = Math.floor(kk);
-
-           if(j==0)
-           {
-           		drawText2(real_bpm,5,k-40);
-                drawbpmline(k);
-           }
-           else
-		   {
-		   		drawText2(real_bpm,5,k-40);
-                drawText2(bpms[j-1],5,k-20);
-                drawbpmline(k);
-		   }
+            var  k2 = Math.floor(kk);
 
 			for(i = tmp; i<current_bpm_len + tmp; i++)
 			{
@@ -619,6 +609,19 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
                 else drawgrid(0,k);
                 kk = kk - time_ival/1000*sp;
 			}
+			
+			if(j==0)
+            {
+           		drawText2(real_bpm,5,k2-40);
+                drawbpmline(k2);
+            }
+            else
+		    {
+		   		drawText2(real_bpm,5,k2-40);
+                drawText2(bpms[j-1],5,k2-20);
+                drawbpmline(k2);
+		    }
+			
 			tmp = tmp + current_bpm_len % (ival*4);
 		}
 
