@@ -10,19 +10,19 @@
 		p{color:#009; font-weight:bold;position:relative;left:10px;}
 		a{color:#F00;position:relative;top:-10px;}
 		pre{left:10px;position:relative;}
-        #header{color:white;font-weight:bold;background:#06F;}
+        #header{color:white;font-weight:bold;background:#AAA;}
         #pre-div{border:1px solid #AAA;background:#FFF;}
 		#div1{position:fixed;right:20px;bottom:80px;text-align:center;cursor:pointer;}
 		#div2{position:fixed;right:20px;bottom:20px;text-align:center;cursor:pointer;}
         @media screen and(max-width:1366px){body{width:1366px;}}
     </style>
     <title>スクフェス譜面保管所V</title>
+	<link href="favicon.ico" rel="shortcut icon">
 </head>
 
 <body>
 	<div id="header">
-		<h1 style="top:20px;left:20px;position:relative;">欢迎...</h1>
-		<h2 style="top:20px;left:20px;position:relative;" id="func_dis">スクフェス譜面保管所V</h2>
+		<h1 style="top:20px;left:-10px;position:relative;width:inherit;text-align: center" id="func_dis">スクフェス譜面保管所V</h1>
 		<p><br/></p>
 	</div>
     
@@ -95,10 +95,10 @@
     <p>或者直接搜索：<input id="song_name" autofocus = "true" style="width:15em" onkeydown="if(event.keyCode===13) {confirm_search();}"/>&nbsp;
         <input type="button" value="确定" onclick="confirm_search();"/></p>
     <hr/>
-    <div id="songs" style="width:350px;"></div>
-    <div id="song_info" style="position:absolute;top:575px;left:600px;width:600px;background:#FEF"></div>
+    <div id="songs" style="width:500px;"></div>
+    <div id="song_info" style="position:absolute;top:530px;left:600px;width:600px;background:#FEF"></div>
     <script type="application/javascript">
-        confirm_filter();
+        confirm_search();
     </script>
 </body>
 </html>
