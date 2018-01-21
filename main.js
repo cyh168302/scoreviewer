@@ -339,7 +339,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 							"MY舞☆TONIGHT":"73.5 12 73 1 61 2 90 2 179",
 							"Awaken the power":"80 16 190",
                             "勇気はどこに？君の胸に！":"167 258 161",
-							"おやすみなさん！":"164 18 158 4 152 4 148 5 147 1 206",
+							"おやすみなさん！":"164 18 158 4 152 4 148 4 140 5 139 3 206",
 							"One More Sunshine Story":"153 102 143 4 133 28 123 4.5 153",
                             "スピカテリブル": "165 262 164 2 158 2 157 2 156 4 137 2 132.5 2 119.5 4 111 4 81 2 65 0.33 61"};
 
@@ -947,7 +947,7 @@ function get_beatmaps(data)
 	innerhtml = innerhtml + "<p id=\"bottom\"></p>";
 	songslist.innerHTML = innerhtml;
 }
-		
+
 function search_beatmaps(data)
 {
     get_newsongs();
