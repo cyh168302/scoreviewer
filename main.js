@@ -3,17 +3,20 @@ $(window).scroll(function()
 {
     var t = document.body.scrollTop;
     var obj = document.getElementById("song_info");
-    if (t < 530)
+    if (t < 565)
     {
         obj.style.position = "absolute";
-        obj.style.top = "530px";
+        obj.style.left = "580px";
+        obj.style.top = "-10px";
     }
     else
     {
         obj.style.position = "fixed";
+        obj.style.left = "588px";
         obj.style.top = "0px";
     }
 });
+
 function back_top()
 {
 	var temp = document.createElement("a");
@@ -37,19 +40,12 @@ function link5()
 function confirm_filter(){$.getJSON("http://r.llsif.win/maps.json",function(data){get_beatmaps(data);});}
 function confirm_search(){$.getJSON("http://r.llsif.win/maps.json",function(data){search_beatmaps(data);});}
 
-function get_newsongs()
-{
-    var in_html = "<table style='text-align:center;width:inherit'>" +
-        "<tr><th style=\"width: 600px;height:40px;background-color: #BBB\">最新谱面</th></tr>";
-    document.getElementById("song_info").innerHTML = in_html;
-    $.getJSON("http://r.llsif.win/maps.json",function(data){get_newsongs2(data);});
-}
-
+function get_newsongs() {$.getJSON("http://r.llsif.win/maps.json",function(data){get_newsongs2(data);});}
 function get_newsongs2(data)
 {
     var songslist = document.getElementById("song_info");
-    var innerhtml = "<table style='text-align:center;width:inherit'>" +
-        "<tr><th style=\"width: 600px;height:40px;background-color: #BBB\">最新谱面</th></tr>";
+    var innerhtml = "<div style='width: 600px;position: relative;top: 10px' ><table style='text-align:center;width:inherit'>" +
+        "<tr><th style=\"width: 600px;height:40px;background-color: #BBB\">最近更新</th></tr>";
     var new_songs = [530,529,464,396];
     var new_beatmaps = [884,885,886,887,888,889,890,891,892,893];
     var len = data.length;
@@ -142,15 +138,15 @@ function get_newsongs2(data)
                             innerhtml = innerhtml + data[i]["stage_level"]  + " - " + data[i]["s_rank_combo"] + "x(滑键)</th> ";
 						else
                             innerhtml = innerhtml + data[i]["stage_level"]  + " - " + data[i]["s_rank_combo"] + "x</th> ";
-
-                        //if(diff==6 && )
                     }
 				}
             }
         }
     }
-    innerhtml += "</table>";
+    innerhtml += "</table></div>";
     songslist.innerHTML = innerhtml;
+    var h = 65 - songslist.clientHeight;
+    songslist.style.bottom = h + "px";
 }
 
 function oninput1()
@@ -319,8 +315,9 @@ function readbeatmap(way,path,id,difficulty,level,musicpath,iconpath,combo)
     var t = document.body.scrollTop;
     var text = document.getElementById("topscroll");
     text.value = t;
+    document.getElementById("song_info").innerHTML = "";
 	document.getElementById("songs").innerHTML = "<h2 style=\"position:relative;left:10px\">Now Loading...</h2>"
-	$.getJSON("http://r.llsif.win/maps.json",function(data){
+        $.getJSON("http://r.llsif.win/maps.json",function(data){
 		var i;var songname;
 		for(i=0;i<data.length;i++) {if (data[i]["live_track_id"] == id) {songname = data[i]["name"];break;}}
 		$.getJSON("bpm.json",function(data){
@@ -776,7 +773,7 @@ function startDraw(path,beatmap,bpm,name,difficulty,level,musicpath,iconpath,com
 	}
 	to_bottom();
 }
-		
+
 function get_beatmaps(data)
 {
     get_newsongs();
@@ -787,9 +784,18 @@ function get_beatmaps(data)
 	var song_attr = document.getElementById("song_attr").value;
 	var song_level = document.getElementById("song_level").value;
 	var song_type = document.getElementById("song_type").value;
+	var filter1 = document.getElementById("filter2").checked;
+    var filter2 = document.getElementById("filter3").checked;
+    var min_note_set = document.getElementById("min_notes").value;
+    var max_note_set = document.getElementById("max_notes").value;
+	var min_note = 0;
+	var max_note = 2000;
 	var j;
 	var p;
 	var flag = true;
+
+	if ( filter1 )min_note = parseInt(min_note_set);
+    if ( filter2 )max_note = parseInt(max_note_set);
 			
 	if(song_level!="0")
 	{
@@ -797,80 +803,14 @@ function get_beatmaps(data)
 		{
 			for(i=0;i<len;i++)
 			{
-				if((data[i]["stage_level"]==song_level)&(data[i]["difficulty"]==p))
+				if((data[i]["stage_level"]==song_level)&(data[i]["difficulty"]==p)&((data[i]["live_setting_id"]<10000)|(data[i]["live_setting_id"]>20000)))
 				{
 					if ((data[i]["difficulty_text"]!="TECHNICAL")&((data[i]["difficulty_text"]==song_type)|(song_type=="0")))
 					{
 						if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
 						{
-                            var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
-                            var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
-                            var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
-                            var difficulty = data[i]["difficulty_text"];
-                            var level = data[i]["stage_level"];
-                            var name = data[i]["name"];
-                            var notes_cnt = data[i]["s_rank_combo"];
-                            switch(data[i]["attribute_icon_id"])
-                            {
-                                case 1:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
-                                    beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
-                                    sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
-                                    "') style=\"background-color:#FBB;cursor:pointer;height: 30px\">";break;}
-                                case 2:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
-                                    beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
-                                    sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
-                                    "') style=\"background-color:#BFB;cursor:pointer;height: 30px\">";break;}
-                                case 3:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
-                                    beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
-                                    sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
-                                    "') style=\"background-color:#BBF;cursor:pointer;height: 30px\">";break;}
-                                default:break;
-                            }
-                            if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml +
-                                "<th style='width:100px;height: 30px'>ARCADE</th><th style='width:60px;'>" +
-                                notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
-                            else
-                            {
-                                var s_score = data[i]["s_rank_score"];
-                                var s_combo = data[i]["s_rank_combo"];
-                                var s = s_score/s_combo;
-                                var id = data[i]["live_setting_id"];
-                                if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
-                                    innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                        "(滑) </th><th style='width:60px;'>" + notes_cnt +  "x</th><th>" + data[i]["name"]+"</th></tr>";
-                                else if((id==719)|(id==721)|(id==731))
-                                    innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                        "(滑) </th><th style='width:60px;'>" + notes_cnt +  "x</th><th>" + data[i]["name"]+"</th></tr>";
-                                else
-                                    innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                        "</th><th style='width:60px;'>" + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
-                            }
-						}
-					}
-				}	
-			}
-		}
-	}
-	else
-	{
-		for(j=1;j<13;j++)
-		{
-			flag = true;
-			for(p=1;p<7;p++)
-			{
-				for(i=0;i<len;i++)
-				{
-					if((data[i]["stage_level"]==j)&(data[i]["difficulty"]==p))
-					{
-						if ((data[i]["difficulty_text"] != "TECHNICAL")&((data[i]["difficulty_text"]==song_type)|(song_type=="0")))
-						{
-							if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
-							{
-								if(flag)
-								{
-                                    innerhtml = innerhtml + "<tr><th colspan='3' style='text-align: center;background-color:#BBB;height:40px'>★"+ j+"</th></tr>";
-									flag = false;
-								}
+						    if (( data[i]["s_rank_combo"] >= min_note ) && ( data[i]["s_rank_combo"] <= max_note ))
+						    {
                                 var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
                                 var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
                                 var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
@@ -895,8 +835,8 @@ function get_beatmaps(data)
                                     default:break;
                                 }
                                 if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml +
-                                    "<th style='width:100px;height: 30px'>ARCADE</th><th style='width:60px;'>" +
-                                    notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                    "<th style='width:100px;height: 30px'>ARCADE</th><th style='width:60px;'>★" +
+                                    j + "</th><th style='width:60px;'>" + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
                                 else
                                 {
                                     var s_score = data[i]["s_rank_score"];
@@ -905,16 +845,98 @@ function get_beatmaps(data)
                                     var id = data[i]["live_setting_id"];
                                     if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
                                         innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                            "(滑) </th><th style='width:60px;'>" + notes_cnt +  "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                            "(滑)</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                            + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
                                     else if((id==719)|(id==721)|(id==731))
                                         innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                            "(滑) </th><th style='width:60px;'>" + notes_cnt +  "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                            "(滑)</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                            + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
                                     else
                                         innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                            "</th><th style='width:60px;'>" + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                            "</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                            + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
                                 }
-							}
+						    }
 						}
+					}
+				}	
+			}
+		}
+	}
+	else
+	{
+		for(j=1;j<13;j++)
+		{
+			flag = true;
+			for(p=1;p<7;p++)
+			{
+				for(i=0;i<len;i++)
+				{
+					if((data[i]["stage_level"]==j)&(data[i]["difficulty"]==p))
+					{
+					    if ((data[i]["live_setting_id"]<10000)|(data[i]["live_setting_id"]>20000))
+                        {
+                            if ((data[i]["difficulty_text"] != "TECHNICAL")&((data[i]["difficulty_text"]==song_type)|(song_type=="0")))
+                            {
+                                if ((data[i]["attribute_icon_id"]==song_attr)|(song_attr=="0"))
+                                {
+                                    if (( data[i]["s_rank_combo"] >= min_note ) && ( data[i]["s_rank_combo"] <= max_note ))
+                                    {
+                                        if(flag)
+                                        {
+                                            innerhtml = innerhtml +
+                                                "<tr><th colspan='4' style='text-align: center;background-color:#BBB;height:40px'>★"+ j+"</th></tr>";
+                                            flag = false;
+                                        }
+                                        var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
+                                        var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
+                                        var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
+                                        var difficulty = data[i]["difficulty_text"];
+                                        var level = data[i]["stage_level"];
+                                        var name = data[i]["name"];
+                                        var notes_cnt = data[i]["s_rank_combo"];
+                                        switch(data[i]["attribute_icon_id"])
+                                        {
+                                            case 1:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
+                                                beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
+                                                sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
+                                                "') style=\"background-color:#FBB;cursor:pointer;height: 30px\">";break;}
+                                            case 2:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
+                                                beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
+                                                sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
+                                                "') style=\"background-color:#BFB;cursor:pointer;height: 30px\">";break;}
+                                            case 3:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
+                                                beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
+                                                sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
+                                                "') style=\"background-color:#BBF;cursor:pointer;height: 30px\">";break;}
+                                            default:break;
+                                        }
+                                        if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml +
+                                            "<th style='width:100px;height: 30px'>ARCADE</th><th style='width:60px;'>★" +
+                                            j + "</th><th style='width:60px;'>" + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                        else
+                                        {
+                                            var s_score = data[i]["s_rank_score"];
+                                            var s_combo = data[i]["s_rank_combo"];
+                                            var s = s_score/s_combo;
+                                            var id = data[i]["live_setting_id"];
+                                            if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
+                                                innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
+                                                    "(滑)</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                                    + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                            else if((id==719)|(id==721)|(id==731))
+                                                innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
+                                                    "(滑)</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                                    + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                            else
+                                                innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
+                                                    "</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                                    + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                                        }
+                                    }
+                                }
+                            }
+                        }
 					}
 				}
 			}
@@ -947,54 +969,60 @@ function search_beatmaps(data)
 			{
 				if((data[i]["name"].toLowerCase().indexOf(songname.toLowerCase())>=0)&(data[i]["difficulty_text"]!="TECHNICAL"))
 				{
-					if(flag)
-					{	
-						innerhtml = innerhtml + "<tr><th colspan='3' style='text-align: center;background-color:#BBB;height:40px'>★"+ j+"</th></tr>";
-						flag = false;
-					}
-					var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
-					var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
-					var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
-					var difficulty = data[i]["difficulty_text"];
-					var level = data[i]["stage_level"];
-					var name = data[i]["name"];
-					var notes_cnt = data[i]["s_rank_combo"];
-					switch(data[i]["attribute_icon_id"])
-					{
-						case 1:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
-							beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
-							sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
-							"') style=\"background-color:#FBB;cursor:pointer;height: 30px\">";break;}
-						case 2:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
-							beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
-							sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
-							"') style=\"background-color:#BFB;cursor:pointer;height: 30px\">";break;}
-						case 3:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
-							beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" + 
-							sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] + 
-							"') style=\"background-color:#BBF;cursor:pointer;height: 30px\">";break;}
-						default:break;
-					}
-                    if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml +
-                        "<th style='width:100px;height: 30px'>ARCADE</th><th style='width:60px;'>" +
-                        notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
-                    else
+                    if ((data[i]["live_setting_id"]<10000)|(data[i]["live_setting_id"]>20000))
                     {
-                        var s_score = data[i]["s_rank_score"];
-                        var s_combo = data[i]["s_rank_combo"];
-                        var s = s_score/s_combo;
-                        var id = data[i]["live_setting_id"];
-                        if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
-                            innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                "(滑) </th><th style='width:60px;'>" + notes_cnt +  "x</th><th>" + data[i]["name"]+"</th></tr>";
-                        else if((id==719)|(id==721)|(id==731))
-                            innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                "(滑) </th><th style='width:60px;'>" + notes_cnt +  "x</th><th>" + data[i]["name"]+"</th></tr>";
+                        if(flag)
+                        {
+                            innerhtml = innerhtml + "<tr><th colspan='4' style='text-align: center;background-color:#BBB;height:40px'>★"+ j+"</th></tr>";
+                            flag = false;
+                        }
+                        var beatmap_path = "http://a.llsif.win/live/json/"+data[i]["notes_setting_asset"];
+                        var sound_asset = "http://r.llsif.win/"+data[i]["sound_asset"];
+                        var icon_asset = "http://r.llsif.win/"+data[i]["live_icon_asset"];
+                        var difficulty = data[i]["difficulty_text"];
+                        var level = data[i]["stage_level"];
+                        var name = data[i]["name"];
+                        var notes_cnt = data[i]["s_rank_combo"];
+                        switch(data[i]["attribute_icon_id"])
+                        {
+                            case 1:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
+                                beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
+                                sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
+                                "') style=\"background-color:#FBB;cursor:pointer;height: 30px\">";break;}
+                            case 2:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
+                                beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
+                                sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
+                                "') style=\"background-color:#BFB;cursor:pointer;height: 30px\">";break;}
+                            case 3:{innerhtml = innerhtml + "<tr onclick=readbeatmap('2','" +
+                                beatmap_path + "','" + data[i]["live_track_id"] + "','" + difficulty + "','" + level + "','" +
+                                sound_asset + "','" + icon_asset + "','" + data[i]["s_rank_combo"] +
+                                "') style=\"background-color:#BBF;cursor:pointer;height: 30px\">";break;}
+                            default:break;
+                        }
+                        if(data[i]["live_setting_id"]>20000)innerhtml = innerhtml +
+                            "<th style='width:100px;height: 30px'>ARCADE</th><th style='width:60px;'>★" +
+                            j + "</th><th style='width:60px;'>" + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
                         else
-                            innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
-                                "</th><th style='width:60px;'>" + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
-                    }
-				}	
+                        {
+                            var s_score = data[i]["s_rank_score"];
+                            var s_combo = data[i]["s_rank_combo"];
+                            var s = s_score/s_combo;
+                            var id = data[i]["live_setting_id"];
+                            if((s!=739)&(data[i]["difficulty_text"]=="MASTER"))
+                                innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
+                                    "(滑)</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                    + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                            else if((id==719)|(id==721)|(id==731))
+                                innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
+                                    "(滑)</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                    + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                            else
+                                innerhtml = innerhtml + "<th style='width:100px;height: 30px'>" + data[i]["difficulty_text"] +
+                                    "</th><th style='width:60px;'>★" + j + "</th><th style='width:60px;'>"
+                                    + notes_cnt + "x</th><th>" + data[i]["name"]+"</th></tr>";
+                        }
+				    }
+				}
 			}
 		}
     }
