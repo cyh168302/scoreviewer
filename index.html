@@ -1,201 +1,116 @@
-<!DOCTYPE html>
-<html lang="zh-CN" xmlns="http://www.w3.org/1999/html">
-
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-	<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
-	<link href="css/animate.css" rel="stylesheet" />
-    <link href="css/style.css" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="ichart.1.2.src.js"></script>
+    <style type="text/css">
+		body{background:#FEF;}
+		p{color:#009; font-weight:bold;position:relative;left:10px;}
+		a{color:#F00;position:relative;top:-10px;}
+		pre{left:10px;position:relative;}
+        #header{color:white;font-weight:bold;background:#AAA;}
+        #pre-div{border:1px solid #AAA;background:#FFF;}
+		#div1{position:fixed;right:20px;bottom:80px;text-align:center;cursor:pointer;z-index:999;}
+		#div2{position:fixed;right:20px;bottom:20px;text-align:center;cursor:pointer;z-index:999;}
+        @media screen and(max-width:1366px){body{width:1366px;}}
+    </style>
     <title>スクフェス譜面保管所V</title>
-    <link href="favicon.png" rel="shortcut icon">
+	<link href="favicon.png" rel="shortcut icon">
 </head>
 
 <body>
-	<header id="header-banner">
-		<nav class="navbar navbar-default navbar-fixed-top fadeIn" role="navigation">
-			<div class="container">
-				<div class="navbar-header">
-					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#dropdown-box-1">
-						<span class="sr-only">Toggle navigation</span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-						<span class="icon-bar"></span>
-					</button>
-					<div class="navbar-brand">
-						<a href="#">欢迎</a>
-					</div>
-				</div>
+	<div id="header">
+		<h1 style="top:20px;left:-10px;position:relative;width:inherit;text-align: center" id="func_dis">スクフェス譜面保管所V</h1>
+		<p><br/></p>
+	</div>
+    
+    <div id="div1" onclick="back_top();"><img src="up.jpg"/></div>
+    <div id="div2" onclick="to_bottom();"><img src="down.jpg"/></div>
+    
+    <div id = "pre-div">
+   		<pre style="font-weight: bold">1、推荐使用PC端Chrome浏览器，最佳分辨率1366×768</pre>
+    	<pre>2、使用本功能可以查询SIF日服已实装的所有谱面的直线图</pre>
+        <pre>3、有关曲目bpm的信息可以在 <span style="color:#009;cursor:pointer;text-decoration:underline;"
+         	onclick="link1();">日服WIKI</span> 查询，这里感谢研究部 @Means88 爬了一份bpm的数据</pre>
+        <pre>4、关于变速歌曲：目前正在进行测试，将一首一首地逐渐支持对变速歌曲的支持。变速信息是手动测得的，因此包含部分作者个人观点，如果您已知一些变速信息欢迎尽快告诉作者w</pre>
+        <pre>5、关于【谱面拉伸程度】：值越大则键与键之间距离越大，更利于观察谱面细节，但同时谱面也会很长，不利于全局观察。请根据需求自行选择合适的值（默认200）。部分浏览器（如IE）可能无法完全显示较长的谱面</pre>
+        <pre>6、本站所有资源（谱面，音乐，图片等）都由ieb（微博：<span style="color:#009;cursor:pointer;text-decoration:underline;"
+         	onclick="link2();">@电玩果</span>）提供，在此特别鸣谢！</pre>
+        <pre>7、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
+         	onclick="link4();">2982349992</span>，对本程序有兴趣的同学可以<span style="color:#009;cursor:pointer;
+            text-decoration:underline;" onclick="link5();">转至GitHub</span></pre>
+	</div>
 
-				<div class="collapse navbar-collapse navbar-right" id="dropdown-box-1">
-					
-					<ul class="nav navbar-nav">
-						<li class="active"><a href="#home">主页</a></li>
-						<li><a href="#aboutus">关于本站</a></li>
-						<li><a href="#testimonials">更新日志</a></li>
-						<li class="dropdown" role="presentation">
-							<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-							  其他SIF相关网站 <span class="caret"></span>
-							</a>
-							<ul class="dropdown-menu bullet fadeIn" role="menu">
-							  <li><a href="#first">游戏资源类</a></li>
-							  <li><a href="#second">游戏计算类</a></li>
-							  <li><a href="#third">游戏数据记录类</a></li>
-							</ul>
-						</li>
-						<li><a href="#contactus">联系作者</a></li>
-					</ul>
-				</div>
-			</div>
-		</nav>
-	</header>
+    <input id="topscroll" style="visibility: hidden;position:absolute"/>
+    <p id="top" style="position: relative;top: 5px">节拍线间距：<select id="grid_ival">
+        <option value = "4">16分音</option>
+        <option value = "8">32分音</option>
+        <option value = "3">12分音</option>
+        <option value = "6">24分音</option>
+        <option value = "2"> 8分音</option>
+        <option value = "0">（不画节拍线）</option>
+    </select></p>
 
-    <section class="banner" id="home">
-		<div class="container">
-			<div class="slogan">
-				<h2>スクフェス譜面保管所V </h2>
-				<h4><a href="main.html">点击此处直接前往</a></h4>
-				<p>Tips: 若您不想每次都来到这个页面，可以选择直接访问
-					<a href="http://llscoreviewer.xyz/main.html">llscoreviewer.xyz/main.html</a></p>
-			</div>
-		</div>
-    </section>
+    <p>谱面拉伸程度：
+    	<input id="space2"  value="200" style="width: 30px" oninput="oninput2();"/>
+        <input id="space" type="range" value="200" max="400" min="50" step="10" oninput="oninput1();"
+               style="width: 200px;position: relative;left: 10px;top: 5px">
+    </p>
 
-    <section class="aboutus" id="aboutus">
-		<div class="container">
-			<div class="row">
-				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-					<div>
-						<h2>关于本站</h2>
-						<p>
-                            本站【开源】，关于源代码可以翻到底部有链接。<br>
-							在这里你可以查询到《スクフェス》游戏中所有的谱面信息，并以静态直线图的形式展现。<br>
-							碰到了不会打，看不懂的谱面？那就来这里看看，研究一下吧！<br>
-							本站所有资源（谱面文件及音乐图片等）均来自<a href="http://db.loveliv.es">db.loveliv.es</a>，
-							特别鸣谢：<a href="https://weibo.com/jebwizoscar">@电玩果</a><br>
-							另外这个其实网站并没有服务器，只是一个单独的页面，谱面查询功能的算法全部通过前端js实现。<br>
-							因此，这样一个网站的搭建十分简单，有兴趣的可以继续看下去w<br>
-						</p>
-						<h3 style="font-weight: bold;font-size:24px">本站是如何搭建的</h3>
-						<p>
-							搭建这样一个网站你只需要三样东西：<br>
-							1、自己写的一个网页，命名为index.html<br>
-							2、域名（这里用的腾讯云）<br>
-							3、GitHub账户
-						</p>
-						<h3 style="font-weight: bold;font-size:20px">
-						关于网页（.html）如何制作这里就不多讲，我们假设已经做好了这么一个网页。
-						</h3>
-						<p>
-							接下来按照以下步骤来做即可：<br>
-							1、到腾讯云注册一个域名，新用户最低1元首年（强烈推荐）。<br>
-							2、在你的GitHub里面新建一个repo，并命名为"username.github.io"
-							（这里username替换成你自己的github名字）。<br>
-							3、然后将整个网页所有文件上传至这个repo。<br>
-							4、点开上面那一栏的“settings”选项卡，并翻到GitHub Pages那一栏，找到"custom domain"，
-							填上刚刚注册的域名并保存。<br>
-							5、回到腾讯云控制面板，选择“域名管理”-"管理"，找到自己域名然后选择“域名解析”-“添加记录”。<br>
-							6、主机记录即域名前缀（也可以不填），比如选择"www"，那么之后就以"www.YourDomain"访问。<br>
-							7、记录类型选择“CNAME”，记录值填"username.github.io"，其他不用改，点击保存。<br>
-							8、域名解析很快就生效，试着用自己注册的域名访问自己网站吧！Enjoy it！
-						</p>
-					</div>
-				</div>				
-			</div>
-		</div>
-	</section>
-
-	<section class="testimonials" id="testimonials">
-		<div class="container">
-			<div>
-				<h2>更新日志</h2>
-				<p>2017.6.21 - V1.0  本站发布。</p>
-				<p>2017.6.23 - V1.0.1  歌曲BPM问题修复。</p>
-				<p>2017.7.31 - V1.1  谱面增加星标和道具显示，优化了显示界面。</p>
-				<p>2017.8.1  - V1.1.1  显示小节数以及每小节的note数统计。</p>
-				<p>2017.8.11 - V2.0  增加更多谱面信息显示，包括位置权重，长条星标道具滑键数等，增加了歌曲在线播放。</p>
-				<p>2017.8.17 - V2.1  优化手机浏览时的界面。</p>
-				<p>2017.1.11 - V2.2  优化变速歌曲谱面的显示。</p>
-				<p>2017.1.21 - V3.0  UI大调整，增加最近更新列表，优化手机界面。</p>
-			</div>
-		</div>
-	</section>
-
-    <section class="services" id="services">
-		<div class="container">
-			<div>
-				<h2>其他SIF相关网站</h2>
-					<h3 id="first" style="font-weight: bold;font-size:24px;padding-top: 10px">游戏资源类：</h3>
-						<p>LoveLive！中文百科：<br><a href="http://www.lovelivewiki.com">www.lovelivewiki.com</a></p>
-						<p>LoveLive！日文百科：<br><a href="http://www59.atwiki.jp/lovelive-sif">www59.atwiki.jp/lovelive-sif</a></p>
-						<p>SIFdbV：<a href="http://db.lovelive.es">db.lovelive.es</a><br>
-							包含游戏内所有卡片，歌曲，背景，剧情等资源，因有尽有，也是本站所有资源来源，作者@电玩果</p>
-						<p>LoveLive！查卡器：<a href="http://card.niconi.co.ni">card.niconi.co.ni</a><br>
-							查询卡牌信息，剧情。模拟打歌，查看动态谱面
-
-					<h3 id="second" style="font-weight: bold;font-size:24px;padding-top: 10px">游戏计算类：</h3>
-						<p>LLHelper：<a href="http://llhelper.com">llhelper.com</a>
-							<span style="font-weight:bold">（强烈推荐！）</span><br>
-							成立最早，功能最全的游戏数据计算网站，强度计算，活动算心等，帮助您节约更多资源，作者@Glaceon</p>
-						<p>LLATB：<a href="http://llsifteambuilder.herokuapp.com">llsifteambuilder.herokuapp.com</a><br>
-							智能自动组队，歌曲得分模拟计算（支持MF三连和新技能卡，可以作为llh缺失功能的补充）</p>
-						<p>活动控分计算器：<a href="http://www.sifptcalc.cc">www.sifptcalc.cc</a></p>
-
-					<h3 id="third" style="font-weight: bold;font-size:24px;padding-top: 10px">游戏数据记录类：</h3>
-						<p>国服数据站：<a href="http://sifcn.loveliv.es/">sifcn.loveliv.es</a><br>
-							国服信息最全的数据站，基本因有尽有</p>
-						<p>日服、国际服历史活动档线：<a href="http://llsif.net">llsif.net</a></p>
-						<p>国服活动实时数据：<a href="https://yohane.cc">yohane.cc</a></p>
-						<p>SIFStats：日服专用。可以根据网页提示修改DNS连接代理服务器，收集自己账号的各种记录，
-							包括卡组、Live记录、抽卡记录<br>
-							个人数据：<a href="http://my.llsif.win/">my.llsif.win</a><br>
-							服务器数据：<a href="http://stats.llsif.win/">stats.llsif.win</a></p>
-						<p>LLproxy/PLL：<a href="http://pll.sokka.cn">pll.sokka.cn</a><br>
-							国服专用，同SIFStats</p>
-			</div>
-		</div>
-	</section>
-	<!-- /.services -->
-	
-	<!-- contact us -->
-	<section class="contactus" id="contactus">
-		<div class="container">
-			<div>
-                <h2>联系作者&nbsp/&nbspBUG反馈</h2>
-                <p>作者邮箱：<a href="mailto:cyh302168@163.com">cyh302168@163.com</a> </p>
-                <p>联系QQ：<a href="http://wpa.qq.com/msgrd?v=3&uin=2982349992&site=qq&menu=yes">2982349992</a></p>
-                <p>GitHub：<a href="http://github.com/cyh168302">http://github.com/cyh168302</a></p>
-            </div>
-		</div>
-	</section>
-
-	<footer id="section-footer">
-		<div class="container">
-			<div class="row">
-				<div class="col-md-12 col-lg-12">
-					<div class="wow fadeIn" data-wow-delay="0.4s">
-						<div class="btn-circle-scroll">
-							<a href="#header-banner" class="btn-circle">返回顶部</a>
-						</div>
-					</div>
-					<p>&copy;&nbspCopyright 2018. All rights reserved.</p>
-				</div>
-			</div>	
-		</div>
-	</footer>
-	<!-- /.footer -->
-	
-	
-	<!-- Core JavaScript Files -->
-	<script src="js/jquery.min.js"></script>
-	<script src="js/bootstrap.min.js"></script>
-	<script src="js/jquery.easing.min.js"></script>	
-	<script src="js/jquery.scrollTo.js"></script>
-	<script src="js/wow.min.js"></script>			<!-- Reveal animation when you scroll by wow.js. It need animate.css library -->
-	<!-- Custom Theme JavaScript -->
-	<script src="js/custom.js"></script>
-
+    <p>歌曲属性：
+    	<select id="song_attr">
+        	<option value = "0">（全部）</option>
+        	<option style="color:red" value = "1">SMILE</option>
+            <option style="color:green" value = "2">PURE</option>
+            <option style="color:blue" value = "3">COOL</option>
+        </select>&nbsp;
+       谱面等级：
+        <select id="song_level">
+        	<option value = "0">（全部）</option>
+        	<option value = "12">★12</option>
+            <option value = "11">★11</option>
+            <option value = "10">★10</option>
+            <option value = "9">★9</option>
+        	<option value = "8">★8</option>
+            <option value = "7">★7</option>
+            <option value = "6">★6</option>
+            <option value = "5">★5</option>
+            <option value = "4">★4</option>
+            <option value = "3">★3</option>
+            <option value = "2">★2</option>
+            <option value = "1">★1</option>  
+        </select>&nbsp;
+       谱面难度：
+        <select id="song_type">
+        	<option value = "0">（全部）</option>
+        	<option value = "MASTER">MASTER</option>
+            <option value = "EXPERT">EXPERT</option>
+            <option value = "HARD">HARD</option>
+            <option value = "NORMAL">NORMAL</option>
+            <option value = "EASY">EASY</option>
+        </select>&nbsp;</p>
+    <p>高级筛选：
+        <input id="filter2" type="checkbox" onchange="onchange1();"/>键数大于：<input style="width:50px" id = 'min_notes'disabled="true"/>
+        <input id="filter3" type="checkbox" onchange="onchange2();"/>键数小于：<input style="width:50px" id = 'max_notes' disabled="true"/>
+        <input type="button" value="确定筛选" onclick="confirm_filter();" style="position: relative;left: 20px"/></p>
+    <p>或者直接搜索：<input id="song_name" autofocus = "true" style="width:15em" onkeydown="if(event.keyCode===13) {confirm_search();}"/>&nbsp;
+        <input type="button" value="确定" onclick="confirm_search();"/></p>
+    <hr/>
+    <div style="position: relative;top:0px;left: 0px;width:1200px;">
+    <div id="songs" style="width:500px;"></div>
+    <div id="song_info" style="position:absolute;top:-10px;left:580px;width:600px;height:600px;background:transparent"></div></div>
+    <script type="application/javascript">
+        function onchange1() {document.getElementById("min_notes").disabled = !document.getElementById("filter2").checked;}
+        function onchange2() {document.getElementById("max_notes").disabled = !document.getElementById("filter3").checked;}
+        confirm_search();
+    </script>
 </body>
-
 </html>
+
+
+
+
+
+
