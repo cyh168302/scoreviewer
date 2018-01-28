@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <script type="text/javascript" src="jquery.js"></script>
+    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="ichart.1.2.src.js"></script>
+    <style type="text/css">
+		body{background:#FEF;}
+		p{color:#009; font-weight:bold;position:relative;left:10px;}
+		a{color:#F00;position:relative;top:-10px;}
+		pre{left:10px;position:relative;}
+        #header{color:white;font-weight:bold;background:#AAA;}
+        #pre-div{border:1px solid #AAA;background:#FFF;}
+		#div1{position:fixed;right:20px;bottom:80px;text-align:center;cursor:pointer;z-index:999;}
+		#div2{position:fixed;right:20px;bottom:20px;text-align:center;cursor:pointer;z-index:999;}
+        @media screen and(max-width:1366px){body{width:1366px;}}
+    </style>
+    <title>スクフェス譜面保管所V</title>
+	<link href="favicon.png" rel="shortcut icon">
+</head>
+
+<body>
+	<div id="header">
+		<h1 style="top:20px;left:-10px;position:relative;width:inherit;text-align: center" id="func_dis">スクフェス譜面保管所V</h1>
+		<p><br/></p>
+	</div>
+    
+    <div id="div1" onclick="back_top();"><img src="up.jpg"/></div>
+    <div id="div2" onclick="to_bottom();"><img src="down.jpg"/></div>
+    
+    <div id = "pre-div">
+   		<pre style="font-weight: bold">1、推荐使用PC端Chrome浏览器，最佳分辨率1366×768</pre>
+    	<pre>2、使用本功能可以查询SIF日服已实装的所有谱面的直线图</pre>
+        <pre>3、有关曲目bpm的信息可以在 <span style="color:#009;cursor:pointer;text-decoration:underline;"
+         	onclick="link1();">日服WIKI</span> 查询，这里感谢研究部 @Means88 爬了一份bpm的数据</pre>
+        <pre>4、关于变速歌曲：目前正在进行测试，将一首一首地逐渐支持对变速歌曲的支持。变速信息是手动测得的，因此包含部分作者个人观点，如果您已知一些变速信息欢迎尽快告诉作者w</pre>
+        <pre>5、关于【谱面拉伸程度】：值越大则键与键之间距离越大，更利于观察谱面细节，但同时谱面也会很长，不利于全局观察。请根据需求自行选择合适的值（默认200）。部分浏览器（如IE）可能无法完全显示较长的谱面</pre>
+        <pre>6、本站所有资源（谱面，音乐，图片等）都由ieb（微博：<span style="color:#009;cursor:pointer;text-decoration:underline;"
+         	onclick="link2();">@电玩果</span>）提供，在此特别鸣谢！</pre>
+        <pre>7、Bug反馈，联系作者QQ： <span style="color:#009;cursor:pointer;text-decoration:underline;"
+         	onclick="link4();">2982349992</span>，对本程序有兴趣的同学可以<span style="color:#009;cursor:pointer;
+            text-decoration:underline;" onclick="link5();">转至GitHub</span></pre>
+	</div>
+
+    <input id="topscroll" style="visibility: hidden;position:absolute"/>
+    <p id="top" style="position: relative;top: 5px">节拍线间距：<select id="grid_ival">
+        <option value = "4">16分音</option>
+        <option value = "8">32分音</option>
+        <option value = "3">12分音</option>
+        <option value = "6">24分音</option>
+        <option value = "2"> 8分音</option>
+        <option value = "0">（不画节拍线）</option>
+    </select></p>
+
+    <p>谱面拉伸程度：
+    	<input id="space2"  value="200" style="width: 30px" oninput="oninput2();"/>
+        <input id="space" type="range" value="200" max="400" min="50" step="10" oninput="oninput1();"
+               style="width: 200px;position: relative;left: 10px;top: 5px">
+    </p>
+
+    <p>歌曲属性：
+    	<select id="song_attr">
+        	<option value = "0">（全部）</option>
+        	<option style="color:red" value = "1">SMILE</option>
+            <option style="color:green" value = "2">PURE</option>
+            <option style="color:blue" value = "3">COOL</option>
+        </select>&nbsp;
+       谱面等级：
+        <select id="song_level">
+        	<option value = "0">（全部）</option>
+        	<option value = "12">★12</option>
+            <option value = "11">★11</option>
+            <option value = "10">★10</option>
+            <option value = "9">★9</option>
+        	<option value = "8">★8</option>
+            <option value = "7">★7</option>
+            <option value = "6">★6</option>
+            <option value = "5">★5</option>
+            <option value = "4">★4</option>
+            <option value = "3">★3</option>
+            <option value = "2">★2</option>
+            <option value = "1">★1</option>  
+        </select>&nbsp;
+       谱面难度：
+        <select id="song_type">
+        	<option value = "0">（全部）</option>
+        	<option value = "MASTER">MASTER</option>
+            <option value = "EXPERT">EXPERT</option>
+            <option value = "HARD">HARD</option>
+            <option value = "NORMAL">NORMAL</option>
+            <option value = "EASY">EASY</option>
+        </select>&nbsp;</p>
+    <p>高级筛选：
+        <input id="filter2" type="checkbox" onchange="onchange1();"/>键数大于：<input style="width:50px" id = 'min_notes'disabled="true"/>
+        <input id="filter3" type="checkbox" onchange="onchange2();"/>键数小于：<input style="width:50px" id = 'max_notes' disabled="true"/>
+        <input type="button" value="确定筛选" onclick="confirm_filter();" style="position: relative;left: 20px"/></p>
+    <p>或者直接搜索：<input id="song_name" autofocus = "true" style="width:15em" onkeydown="if(event.keyCode===13) {confirm_search();}"/>&nbsp;
+        <input type="button" value="确定" onclick="confirm_search();"/></p>
+    <hr/>
+    <div style="position: relative;top:0px;left: 0px;width:1200px;">
+    <div id="songs" style="width:500px;"></div>
+    <div id="song_info" style="position:absolute;top:-10px;left:580px;width:600px;height:600px;background:transparent"></div></div>
+    <script type="application/javascript">
+        function onchange1() {document.getElementById("min_notes").disabled = !document.getElementById("filter2").checked;}
+        function onchange2() {document.getElementById("max_notes").disabled = !document.getElementById("filter3").checked;}
+        confirm_search();
+    </script>
+</body>
+</html>
+
+
+
+
+
+
